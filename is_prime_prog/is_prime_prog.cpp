@@ -7,7 +7,7 @@
 
  
 
-bool IsPrime(int n)
+bool IsPrime(long long n)
 {
     if (n < 2)
     {
@@ -34,7 +34,7 @@ bool IsPrime(int n)
     }
     return true;
 }
-int i;
+long long i;
 int main()
 {
 

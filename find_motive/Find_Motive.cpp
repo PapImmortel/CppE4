@@ -4,56 +4,56 @@
 
 using namespace std;
 
-int Find_Motive(string dossier, string mot)
+int Find_Motive(ifstream file, string motive)
 {
 
 	int nbFrequence = 0;
-	ifstream fichier(dossier, ios::in);
-	if (fichier)
+
+	string letters;
+	int positionLetters = -1;
+	int positionSpace = -1;
+	string ligne;
+	while (getline(file, ligne))
 	{
-		string letters;
-		int positionLetters = -1;
-		int positionSpace = -1;
-		string ligne;
-		while (getline(fichier, ligne))
+		string message;
+		for (int i = 0; i < size(ligne); i++)
 		{
-			string message;
-			for (int i = 0; i < size(ligne); i++)
+			if ((ligne[i] != ' ') && (ligne[i] != ligne[-1]))
 			{
-				if ((ligne[i] != ' ') && (ligne[i] != ligne[-1]))
+				message = message + ligne[i];
+			}
+			else
+			{
+				string::size_type existe = message.find(motive);
+				if (existe != string::npos)
 				{
-					message = message + ligne[i];
-				}
-				else
-				{
-					string::size_type existe = message.find(mot);
-					if (existe != string::npos)
-					{
-						nbFrequence += 1;
-					}
+					nbFrequence += 1;
 				}
 			}
-
 		}
-		cout << "The file  " + dossier + " contains " + to_string(nbFrequence) + " words containing the motive " + mot << endl;
+
+	}
+	return nbFrequence;
+}
+
+int main(int argc, char* argv[])
+{
+	string file_path = argv[1];
+	string motive = argv[2];
+	ifstream file;
+	file.open(file_path);
+	if (!file)
+	{
+		cout << "The file " + file_path + " could not be opened" << endl;
+		file.close();
 		return 1;
+		
 	}
 	else
 	{
-		cout << "The file " + dossier + " could not be opened" << endl;
+		cout << "The file " + file_path + " contains " + to_string(Find_Motive(file, motive)) + " words containing the motive " + motive << endl;
+		
 	}
-	return 0;
-}
-
-int main(void)
-{
-	string dossier = "";
-	string mot = "";
-	cout << "donne un dossier " << endl;
-	cin >> dossier;
-	cout << " donner le mot cherche" << endl;
-	cin >> mot;
-	Find_Motive(dossier, mot);
-
-	return 0;
+	file.close();
+	return 1;
 }
