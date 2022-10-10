@@ -10,7 +10,7 @@ int Find_Motive(string file_path, string motive)
 	file.open(file_path);
 	if (!file)
 	{
-		cout << "The file " + file_path + " could not be opened" << endl;
+		cout << "The file " + file_path + " could not be opened." << endl;
 		file.close();
 		return 1;
 
