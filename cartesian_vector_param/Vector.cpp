@@ -17,7 +17,7 @@
     Vector::Vector(const std::initializer_list<int> IL)
     {
         auto Val = std::data(IL);
-        for (int i; i < NDIM;i++)
+        for (int i=0; i < NDIM;i++)
         {
             this->coord[i] = Val[i];
         }
@@ -103,14 +103,15 @@ int& Vector::operator[](size_t i)
     return this->coord[i];
 }
 
-std::ostream &operator<<(std::ostream& os,  const Vector &rhs)
+std::ostream &operator<<(std::ostream& os, const Vector& rhs)
 {
-    os << "(";
-    for (int i = 0; i < NDIM; i++)
+    os << "{";
+    Vector newVec = Vector(rhs);
+    for (int i = 0; i < NDIM-1; i++)
     {
-        os << rhs.getcoord[i];
-
+        os << newVec[i]<<",";
     }
-
+    os << newVec[NDIM - 1] << "}";
+    return os;
 }
 // Nonmember function operators go here

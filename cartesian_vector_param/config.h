@@ -1,7 +1,7 @@
 ﻿// DO NOT CHANGE THIS
 
 #ifndef NDIM
-#define NDIM 3
+#define NDIM 2
 #endif
 
 // vectors often deal with reals, however ints are better for testing

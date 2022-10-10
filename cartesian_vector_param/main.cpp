@@ -130,7 +130,7 @@ void testVar(size_t n, int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-    if (argc <= 2)
+    /*if (argc <= 2)
         throw std::runtime_error("Expects: first arg, number of elements, "
             "other args, instructions to run");
     size_t n_elem = std::atol(argv[1]);
@@ -141,6 +141,7 @@ int main(int argc, char* argv[])
     else
         testVar(n_elem, argc - 2, &(argv[2]));
         
-    return 0;
+    return 0;*/
+    testInit();
     
 }
