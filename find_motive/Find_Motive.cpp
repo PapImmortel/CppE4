@@ -4,7 +4,7 @@
 
 using namespace std;
 
-int Find_Motive(string file_path, string motive)
+void Find_Motive(string file_path, string motive)
 {
 	ifstream file;
 	file.open(file_path);
@@ -12,7 +12,7 @@ int Find_Motive(string file_path, string motive)
 	{
 		cout << "The file " + file_path + " could not be opened." << endl;
 		file.close();
-		return 1;
+		return ;
 
 	}
 	else
@@ -48,7 +48,7 @@ int Find_Motive(string file_path, string motive)
 	}
 
 	file.close();
-	return 0;
+	return;
 }
 
 int main(int argc, char* argv[])
@@ -56,5 +56,5 @@ int main(int argc, char* argv[])
 	string file_path = argv[1];
 	string motive = argv[2];
 	
-	return Find_Motive(file_path,motive);
+	Find_Motive(file_path,motive);
 }
