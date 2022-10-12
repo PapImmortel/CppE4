@@ -47,7 +47,7 @@ void Find_Motive(string file_path, string motive)
 	file.close();
 	return;
 }
-
+ 
 int main(int argc, char* argv[])
 {
 	string file_path = argv[1];
