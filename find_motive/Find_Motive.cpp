@@ -19,13 +19,10 @@ void Find_Motive(string file_path, string motive)
 	{
 		int nbFrequence = 0;
 
-		string letters;
-		int positionLetters = -1;
-		int positionSpace = -1;
 		string ligne;
 		while (getline(file, ligne))
 		{
-			string message;
+			string message = "";
 			for (int i = 0; i < size(ligne); i++)
 			{
 				if ((ligne[i] != ' ') && (ligne[i] != ligne[-1]))
