@@ -38,22 +38,19 @@ long long i;
 int main()
 {
 
-
-    std::cout << "donne un chiffre " << std::endl;
-
     while (std::cin)
     {
         std::cin >> i;
         if (IsPrime(i))
         {
             std::string res = std::to_string(i);
-            res = res + " is a Prime : True";
+            res = res + " is a prime : True";
             std::cout << res << std::endl;
         }
         else
         {
             std::string res = std::to_string(i);
-            res = res + " is a Prime : False";
+            res = res + " is a prime : False";
             std::cout << res << std::endl;
         }
 
