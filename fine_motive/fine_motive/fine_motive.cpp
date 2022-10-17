@@ -12,7 +12,7 @@ void Find_Motive(string file_path, string motive)
 	{
 		cout << "The file " + file_path + " could not be opened." << endl;
 		file.close();
-		return ;
+		return;
 
 	}
 	else
@@ -25,7 +25,7 @@ void Find_Motive(string file_path, string motive)
 			string message = "";
 			for (int i = 0; i < size(ligne); i++)
 			{
-				if ((ligne[i] != ' ') && (ligne[i] != ligne.back()))
+				if ((ligne[i] != ' ') && (ligne[i] != ligne[-1]))
 				{
 					message = message + ligne[i];
 				}
@@ -47,11 +47,11 @@ void Find_Motive(string file_path, string motive)
 	file.close();
 	return;
 }
- 
+
 int main(int argc, char* argv[])
 {
 	string file_path = argv[1];
 	string motive = argv[2];
-	
-	Find_Motive(file_path,motive);
+
+	Find_Motive(file_path, motive);
 }
