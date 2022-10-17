@@ -4,6 +4,6 @@
 using namespace std;
 
 #pragma once
-int Find_Motive(string dossier, string mot);
+void Find_Motive(string file_path, string motive);
 
 #pragma once
