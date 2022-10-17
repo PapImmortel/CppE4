@@ -1,4 +1,4 @@
-﻿// is_Prime_Prog.h : fichier Include pour les fichiers Include système standard,
+﻿// is_prime_prog.h : fichier Include pour les fichiers Include système standard,
 // ou les fichiers Include spécifiques aux projets.
 
 #pragma once
@@ -9,5 +9,5 @@
 
 
 
-bool IsPrime(int n);
+bool IsPrime(long long n);
 // TODO: Référencez ici les en-têtes supplémentaires nécessaires à votre programme.
