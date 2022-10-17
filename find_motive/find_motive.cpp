@@ -35,8 +35,9 @@ void Find_Motive(string file_path, string motive)
 					if (existe != string::npos)
 					{
 						nbFrequence += 1;
-						message = "";
 					}
+					message = "";
+
 				}
 			}
 
