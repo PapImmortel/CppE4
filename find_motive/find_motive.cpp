@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-
+ 
 using namespace std;
 
 void Find_Motive(string file_path, string motive)
