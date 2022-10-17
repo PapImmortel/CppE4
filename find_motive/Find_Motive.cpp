@@ -25,7 +25,7 @@ void Find_Motive(string file_path, string motive)
 			string message = "";
 			for (int i = 0; i < size(ligne); i++)
 			{
-				if ((ligne[i] != ' ') && (ligne[i] != ligne[-1]))
+				if ((ligne[i] != ' ') && (ligne[i] != ligne.back()))
 				{
 					message = message + ligne[i];
 				}
