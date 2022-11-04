@@ -1,0 +1,203 @@
+%PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Times-Roman /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 14 0 R /MediaBox [ 0 0 595.2756 841.8898 ] /Parent 13 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+5 0 obj
+<<
+/Outlines 7 0 R /PageLabels 15 0 R /PageMode /UseNone /Pages 13 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author () /CreationDate (D:20221005075343+00'00') /Creator (\(unspecified\)) /Keywords () /ModDate (D:20221005075343+00'00') /Producer (ReportLab PDF Library - www.reportlab.com) 
+  /Subject (\(unspecified\)) /Title (Cartesian Vectors Variable) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 6 /First 8 0 R /Last 11 0 R /Type /Outlines
+>>
+endobj
+8 0 obj
+<<
+/Dest [ 4 0 R /XYZ 57.02362 633.0236 0 ] /Next 9 0 R /Parent 7 0 R /Title (Important)
+>>
+endobj
+9 0 obj
+<<
+/Dest [ 4 0 R /XYZ 57.02362 570.0236 0 ] /Next 10 0 R /Parent 7 0 R /Prev 8 0 R /Title (Restrictions)
+>>
+endobj
+10 0 obj
+<<
+/Dest [ 4 0 R /XYZ 57.02362 507.0236 0 ] /Next 11 0 R /Parent 7 0 R /Prev 9 0 R /Title (Hints)
+>>
+endobj
+11 0 obj
+<<
+/Count 1 /Dest [ 4 0 R /XYZ 57.02362 432.0236 0 ] /First 12 0 R /Last 12 0 R /Parent 7 0 R /Prev 10 0 R 
+  /Title (Challenge)
+>>
+endobj
+12 0 obj
+<<
+/Dest [ 4 0 R /XYZ 57.02362 381.0236 0 ] /Parent 11 0 R /Title (Bonus)
+>>
+endobj
+13 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+14 0 obj
+<<
+/Length 2876
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 57.02362 741.0236 cm
+q
+.133333 .133333 .133333 rg
+BT 1 0 0 1 0 4 Tm /F2 20 Tf 24 TL 132.3142 0 Td (Cartesian Vectors Variable) Tj T* -132.3142 0 Td ET
+Q
+Q
+q
+1 0 0 1 57.02362 645.0236 cm
+q
+BT 1 0 0 1 0 50 Tm -0.003771 Tw 12 TL /F1 10 Tf 0 0 0 rg (This exercise is somewhat similar to the one of last session. It is also concerned with the implementation of a) Tj T* 0 Tw .463597 Tw (vector like class. The main difference is that now the dimension of the vector is no longer known at compile) Tj T* 0 Tw -0.113083 Tw (time. This means that your class is a RAII class, a class which holds some ressource, in this case memory. In) Tj T* 0 Tw -0.098981 Tw (order to teach you good C++ reflexes you must use a suitable smart_pointer in order to internally manage the) Tj T* 0 Tw (resource.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 612.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (Important) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 582.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL .927025 Tw (Operations \(+/-/*\) between Vectors of different size are forbidden and must throw a std::runtime_error with) Tj T* 0 Tw (the message "Incompatible size".) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 549.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (Restrictions) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 519.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL .451079 Tw (You are not allowed to use std::array, std::vector, std::list, etc \(Anything that is already a container\) You are) Tj T* 0 Tw (not allowed to use new/new[] \(delete/delete[]\) in your code. \(Do not even think about using malloc/free!!!\)) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 486.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (Hints) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 444.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 26 Tm /F1 10 Tf 12 TL 2.849223 Tw (std::initializer_list is a somewhat weird construct. You can imagine it like a wrapper around an array) Tj T* 0 Tw 1.908241 Tw (constructed from a braced list of values, like {1, 2, 3}. To access the underlying array, you should can) Tj T* 0 Tw (std::data.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 411.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf .133333 .133333 .133333 rg (Challenge) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 393.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Implementations faster than our \(suboptimal but not bad\) reference implementation get extra points.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 363.0236 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf .133333 .133333 .133333 rg (Bonus) Tj T* ET
+Q
+Q
+q
+1 0 0 1 57.02362 333.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL .139913 Tw (Another bonus is given to an implementation if it is at least 10% faster than any of the other implementations) Tj T* 0 Tw (\(including our reference implem\)) Tj T* ET
+Q
+Q
+ 
+endstream
+endobj
+15 0 obj
+<<
+/Nums [ 0 16 0 R ]
+>>
+endobj
+16 0 obj
+<<
+/S /D /St 1
+>>
+endobj
+xref
+0 17
+0000000000 65535 f 
+0000000073 00000 n 
+0000000114 00000 n 
+0000000221 00000 n 
+0000000330 00000 n 
+0000000535 00000 n 
+0000000639 00000 n 
+0000000922 00000 n 
+0000000994 00000 n 
+0000001101 00000 n 
+0000001224 00000 n 
+0000001341 00000 n 
+0000001489 00000 n 
+0000001582 00000 n 
+0000001642 00000 n 
+0000004570 00000 n 
+0000004611 00000 n 
+trailer
+<<
+/ID 
+[<1613debe37980c4672c120187ba93258><1613debe37980c4672c120187ba93258>]
+% ReportLab generated PDF document -- digest (http://www.reportlab.com)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 17
+>>
+startxref
+4645
+%%EOF

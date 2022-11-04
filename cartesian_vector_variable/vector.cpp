@@ -1,162 +1,184 @@
-#include "Vector.hh"
+﻿#include "Vector.hh"
 #pragma once
 
 
 
 #include "config.h"
 
-Vector::Vector(const Vector&)
+// Add suitable constructors
+Vector::Vector(size_t psize)
 {
+    this->size_ = psize;
+    this->coord = std::make_unique<value[]>(psize);
+    for (int i = 0; i <psize ; i++)
+    {
+        this->coord[i] = 0;
+    }
 
 }
 
-Vector::Vector(size_t N)
+Vector::Vector(std::initializer_list<value> IL)
 {
-	this->sizeVector = N;
-	this->coords = make_unique<value[]>(N);
-	for (int i = 0; i < N; i++)
-	{
-		this->coords[i] = 0;
-	}
-}
-Vector::Vector(std::initializer_list<value> l)
-{
+    this->size_ = IL.size();
+    this->coord = std::make_unique<value[]>(IL.size());
+    auto Val = std::data(IL);
+    for (int i = 0; i < IL.size(); i++)
+    {
+        this->coord[i] = Val[i];
+    }
 
-	auto Val = std::data(l);
-	this->sizeVector = size(Val);
-	this->coords = make_unique<value[]>(this->sizeVector);
-
-	for (int i = 0; i < this->sizeVector; i++)
-	{
-		this->coords[i] = Val[i];
-	}
 }
-size_t Vector::size() const
+Vector::Vector(const Vector& v)
 {
-	return this->sizeVector;
+    this->size_ = v.size();
+    this->coord = std::make_unique<value[]>(v.size());
+    for (int i = 0; i < v.size(); i++)
+    {
+        this->coord[i] = v.coord[i];
+    }
 }
+// possibly more
 
-Vector& Vector::operator+=(const Vector& rhs)
+    // Public Member functions here
+
+Vector& Vector::operator+=(Vector const& rhs)
 {
-	if (this->sizeVector == rhs->sizeVector)
-	{
-		for (int i = 0; i < this->sizeVector; i++)
-		{
-			this->coord[i] += rhs.coord[i];
-		}
-		return *this;
-	}
-	throw std::runtime_error("Incompatible size");
-	
+    if (rhs.size() != this->size())
+        throw std::runtime_error("Incompatible size");
+    for (int i = 0; i < rhs.size(); i++)
+    {
+        this->coord[i] += rhs.coord[i];
+    }
+    return *this;
 }
-
-Vector& Vector::operator-=(const Vector& rhs)
+Vector& Vector::operator=(const Vector& V)
 {
-	if (this->sizeVector == rhs->sizeVector)
-	{
-		for (int i = 0; i < this->sizeVector; i++)
-		{
-			this->coord[i] -= rhs.coord[i];
-		}
-		return *this;
-	}
-	throw std::runtime_error("Incompatible size");
+    this->size_ = V.size();
+    this->coord = std::make_unique<value[]>(V.size());
+    for (int i = 0; i < V.size(); i++)
+    {
+        this->coord[i] = V.coord[i];
+    }
+    return *this;
 }
-
-Vector& Vector::operator+=(value v)
+size_t Vector::size() const 
 {
-	for (int i = 0; i < this->sizeVector; i++)
-	{
-		this->coord[i] += v;
-	}
-	return *this;
+    return this->size_;
 }
-
-Vector& Vector::operator*=(value v)
+value Vector::operator*(const Vector& rhs) const
 {
-	for (int i = 0; i < this->sizeVector; i++)
-	{
-		this->coord[i] *= v;
-	}
-	return *this;
+    if (rhs.size() != this->size())
+        throw std::runtime_error("Incompatible size");
+    value resultat = 0;
+    for (int i = 0; i < this->size(); i++)
+    {
+        resultat += this->coord[i] * rhs.coord[i];
+    }
+    return resultat;
 }
-
-Vector Vector::operator+(const Vector& rhs) const
+Vector Vector::operator*(value Nb) const
 {
-	if (this->sizeVector == rhs->sizeVector)
-	{
-		Vector newVec = new Vector(this->sizeVector);
-		for (int i = 0; i < this->sizeVector; i++)
-		{
-			newVec[i] = this->coords[i] + rhs.coord[i];
-		}
-		return newVec;
-	}
-	throw std::runtime_error("Incompatible size");
+    Vector newVec = Vector(this->size());
+    for (int i = 0; i < this->size(); i++)
+    {
+        newVec.coord[i] = this->coord[i] * Nb;
+    }
+    return newVec;
+}
+Vector& Vector::operator-=(Vector const& rhs)
+{
+    if (rhs.size() != this->size())
+        throw std::runtime_error("Incompatible size");
+    for (int i = 0; i < this->size(); i++)
+    {
+        this->coord[i] -= rhs.coord[i];
+    }
+    return *this;
+}
+Vector& Vector::operator+=(value nb)
+{
+    for (int i = 0; i < this->size(); i++)
+    {
+        this->coord[i] += nb;
+    }
+    return *this;
+}
+Vector& Vector::operator*=(value nb)
+{
+    for (int i = 0; i < this->size(); i++)
+    {
+        this->coord[i] *= nb;
+    }
+    return *this;
 }
 Vector Vector::operator+(value v) const
 {
-	Vector newVec = new Vector(this->sizeVector);
-	for (int i = 0; i < this->sizeVector; i++)
-	{
-		newVec[i] = this->coords[i] +v;
-	}
-	return newVec;
+    Vector newVec = Vector(this->size());
+    for (int i = 0; i < this->size(); i++)
+    {
+        newVec.coord[i] = this->coord[i] + v;
+    }
+    return newVec;
 }
-
-value Vector::operator*(const Vector& rhs) const
+Vector Vector::operator+(const Vector& rhs) const
 {
-	if (this->sizeVector == rhs->sizeVector)
-	{
-		value newVal = 0;
-		for (int i = 0; i < this->sizeVector; i++)
-		{
-			newVal += this->coords[i] * rhs.coord[i];
-		}
-		return newVec;
-	}
-	throw std::runtime_error("Incompatible size");
+    if (rhs.size() != this->size())
+        throw std::runtime_error("Incompatible size");
+    
+    Vector newVec = Vector(this->size());
+    for (int i = 0; i < this->size(); i++)
+    {
+        newVec.coord[i] = this->coord[i] + rhs.coord[i];
+    }
+    return newVec;
 }
-Vector Vector::operator*(value v) const
+/*Vector Vector::operator-(Vector& rhs) const
 {
-	Vector newVec = new Vector(this->sizeVector);
-	for (int i = 0; i < this->sizeVector; i++)
-	{
-		newVec[i] = this->coords[i] * v;
-	}
-	return newVec;
-}
+    if (rhs.size() != this->size())
+        throw std::runtime_error("Incompatible size");
+    Vector newVec = Vector(rhs.size());
+    for (int i = 0; i < rhs.size(); i++)
+    {
+        newVec.coord[i] = this->coord[i] - rhs.coord[i];
+    }
+    return newVec;
+}*/
 
-value& Vector::operator[](size_t idx)
+value& Vector::operator[](size_t i)
 {
-	return this->coord[idx];
+    return this->coord[i];
 }
-
-value Vector::operator[](size_t idx) const
+value Vector::operator[](size_t i) const
 {
-	value valeur = this->coord[idx]
-	return valeur;
+    return this->coord[i];
 }
 
-
-
+std::ostream& operator<<(std::ostream& os, Vector const& rhs)
+{
+    os << "{";
+    Vector newVec = Vector(rhs);
+    for (int i = 0; i < rhs.size() - 1; i++)
+    {
+        os << newVec[i] << ",";
+    }
+    os << newVec[rhs.size() - 1] << "}";
+    return os;
+}
 Vector operator*(const value& s, const Vector& v)
 {
-	return v * s;
+    Vector res = Vector(v.size());
+    for (int i = 0; i < v.size(); i++)
+    {
+        res[i] = v[i] * s;
+    }
+    return res;
 }
-
 Vector operator+(const value& s, const Vector& v)
 {
-	return v + s;
-}
-std::ostream& operator<<(std::ostream& o, const Vector& v)
-{
-	o << "{";
-	Vector newVec = Vector(v);
-	for (int i = 0; i < v.size() - 1; i++)
-	{
-		o << newVec[i] << ",";
-	}
-	o << newVec[v.size()-1] << "}";
-	return o;
+    Vector res = Vector(v.size());
+    for (int i = 0; i < v.size(); i++)
+    {
+        res[i] = v[i] + s;
+    }
+    return res;
 }

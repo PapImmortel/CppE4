@@ -39,8 +39,8 @@ public:
 
 private:
     // Private Member functions here (if necessary)
-    std::unique_ptr<value[]> coords;
-    size_t sizeVector;
+    size_t size_;
+    std::unique_ptr<value[]> coord;
     // Member variables are ALWAYS private, and they go here
 };
 
@@ -48,3 +48,5 @@ private:
 Vector operator*(const value& s, const Vector& v);
 Vector operator+(const value& s, const Vector& v);
 std::ostream& operator<<(std::ostream& o, const Vector& v);
+
+// Nonmember function operators go here
