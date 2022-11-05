@@ -98,14 +98,14 @@ private:
     SDL_Rect rectangle;
     sheep mout;
     wolf lou;
-    std::vector<animal*> animalList;
+    std::vector<std::shared_ptr<animal>> animalList;
     Uint32 color;
 public:
     ground(){};
 
     ground(SDL_Surface* window_surface_ptr); // todo: Ctor
     ~ground(); // todo: Dtor, again for clean up (if necessary)
-    void add_animal(animal * newAnimal); // todo: Add an animal
+    void add_animal(std::shared_ptr<animal> newAnimal); // todo: Add an animal
     void update(); // todo: "refresh the screen": Move animals and draw them
     // Possibly other methods, depends on your implementation
 };

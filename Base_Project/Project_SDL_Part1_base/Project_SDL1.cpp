@@ -106,7 +106,7 @@ ground::ground(SDL_Surface* window_surface_ptr)
     this->color = SDL_MapRGB(this->window_surface_ptr_->format, 0, 255, 0);
     SDL_FillRect(window_surface_ptr_, NULL, color);
     this->rectangle = { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,frame_width, frame_height };
-    std::vector<animal*> animalList = {};
+    std::vector<std::shared_ptr<animal>> animalList = {};
     this->lou = wolf(this->window_surface_ptr_, 1000, 100);
     this->mout = sheep(this->window_surface_ptr_, 0, 100);
 
@@ -120,17 +120,17 @@ ground::~ground()
         animalList.pop_back();
     }
 }
-void ground::add_animal(animal* newAnimal)
+void ground::add_animal(std::shared_ptr<animal> newAnimal)
 {
     animalList.push_back(newAnimal);
 }
 void ground::update()
 {
     SDL_FillRect(window_surface_ptr_, NULL, this->color);
-    for (auto animal_ : animalList)
+    for (auto&& animal_ : animalList)
     {
-        
-        
+        animal_->move();
+        animal_->draw();
     }
     
 
@@ -151,7 +151,7 @@ application::application(unsigned n_sheep, unsigned n_wolf)
         throw std::runtime_error(std::string(SDL_GetError()));
     }
     ground_ = ground(window_surface_ptr_);
-    ground_.add_animal( &sheep(window_surface_ptr_, 100, 100));
+    ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 100, 100));
 
 }
 
