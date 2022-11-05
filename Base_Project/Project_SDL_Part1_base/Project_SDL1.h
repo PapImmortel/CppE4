@@ -30,11 +30,13 @@ private:
     SDL_Surface* image_ptr_; // The texture of the sheep (the loaded image), use
                            // load_surface_for
     SDL_Rect rectangle_;
+    int positionX_;
+    int positionY_;
     // todo: Attribute(s) to define its position
 
 public:
     animal(){};
-    animal(const std::string& file_path, SDL_Surface* window_surface_ptr);
+    animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY);
     // todo: The constructor has to load the sdl_surface that corresponds to the
     // texture
     virtual ~animal(); // todo: Use the destructor to release memory and "clean up
@@ -52,15 +54,14 @@ public:
 // class sheep, derived from animal
 class sheep : public animal {
 private:
-    int positionX;
-    int positionY;
+    
 
 public:
   // todo                                                                             
   // Ctor
   // Dtor
   // implement functions that are purely virtual in base class
-    sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX_, int positionY_);
+    sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY);
     ~sheep();
     //void move() override;
 };
@@ -84,7 +85,7 @@ public:
 
     ground(SDL_Surface* window_surface_ptr); // todo: Ctor
     ~ground(); // todo: Dtor, again for clean up (if necessary)
-    void add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr); // todo: Add an animal
+    void add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY); // todo: Add an animal
     void update(); // todo: "refresh the screen": Move animals and draw them
     // Possibly other methods, depends on your implementation
 };

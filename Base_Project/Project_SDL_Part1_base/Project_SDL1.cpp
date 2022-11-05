@@ -25,7 +25,7 @@ void init() {
 
 
 //class animal
-animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
+animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY)
 {
 
 
@@ -39,6 +39,9 @@ animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
     this->rectangle_ = { 0, 0 ,30,30 };
     if (SDL_BlitSurface(this->image_ptr_, NULL, this->window_surface_ptr_, &this->rectangle_))
         throw std::runtime_error("Could not apply texture.");
+    this->positionX_ = positionX;
+    this->positionY_ = positionY;
+
 }
 animal::~animal()
 {
@@ -52,10 +55,9 @@ void animal::draw()
 
 //class ground
 
-sheep::sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX_, int positionY_) :animal(file_path, window_surface_ptr)
+sheep::sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY) :animal(file_path, window_surface_ptr,positionX,positionY)
 {
-    this->positionX = positionX_;
-    this->positionY = positionY_;
+
 }
 sheep::~sheep() 
 {
@@ -76,11 +78,15 @@ ground::ground(SDL_Surface* window_surface_ptr)
 ground::~ground()
 {
     SDL_FreeSurface(window_surface_ptr_);
-    //delete & animalList;
+    while (!animalList.empty())
+    {
+        delete animalList.back();
+        animalList.pop_back();
+    }
 }
-void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
+void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY)
 {
-    animalList.push_back(&animal(file_path, window_surface_ptr));
+    animalList.push_back(&animal(file_path, window_surface_ptr, positionX, positionY));
 }
 void ground::update()
 {
