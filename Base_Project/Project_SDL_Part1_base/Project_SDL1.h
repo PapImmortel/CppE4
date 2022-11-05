@@ -29,12 +29,12 @@ private:
                                     // animal to be drawn, also non-owning
     SDL_Surface* image_ptr_; // The texture of the sheep (the loaded image), use
                            // load_surface_for
-    SDL_Rect* rectangle_;
+    SDL_Rect rectangle_;
     // todo: Attribute(s) to define its position
 
 public:
-    animal();
-    animal(const std::string& file_path, SDL_Surface* window_surface_ptr, SDL_Rect* rectangle);
+    animal(){};
+    animal(const std::string& file_path, SDL_Surface* window_surface_ptr);
     // todo: The constructor has to load the sdl_surface that corresponds to the
     // texture
     virtual ~animal(); // todo: Use the destructor to release memory and "clean up
@@ -54,16 +54,15 @@ class sheep : public animal {
 private:
     int positionX;
     int positionY;
-    SDL_Surface* window_surface_ptr_;
-    SDL_Surface* image_ptr_;
-    SDL_Rect* rectangle_;
+
+public:
   // todo                                                                             
   // Ctor
   // Dtor
   // implement functions that are purely virtual in base class
-    sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, SDL_Rect* rectangle, int positionX_, int positionY_);
-    virtual ~sheep() override;
-    void move() override;
+    sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX_, int positionY_);
+    //virtual ~sheep() override;
+    //void move() override;
 };
 
 // Insert here:
@@ -77,15 +76,15 @@ class ground {
 private:
   // Attention, NON-OWNING ptr, again to the screen
     SDL_Surface* window_surface_ptr_;
-
+    SDL_Rect rectangle;
     std::vector<animal*> animalList;
 
 public:
-    ground::ground();
+    ground(){};
 
     ground(SDL_Surface* window_surface_ptr); // todo: Ctor
     ~ground(); // todo: Dtor, again for clean up (if necessary)
-    void add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr,SDL_Rect* rectangle); // todo: Add an animal
+    void add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr); // todo: Add an animal
     void update(); // todo: "refresh the screen": Move animals and draw them
     // Possibly other methods, depends on your implementation
 };

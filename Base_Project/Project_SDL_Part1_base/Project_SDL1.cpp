@@ -25,16 +25,23 @@ void init() {
 
 
 //class animal
-animal::animal()
+animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
 {
-    ;
-}
-animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr,SDL_Rect* rectangle)
-{
-    this->window_surface_ptr_ = window_surface_ptr;
-    this->image_ptr_ = IMG_Load(file_path.c_str());
-    this->rectangle_ = rectangle;
 
+
+    this->image_ptr_ = IMG_Load(file_path.c_str());
+    if (!this->image_ptr_)
+        throw std::runtime_error("Could not load image");
+    this->window_surface_ptr_ = window_surface_ptr;
+    if (!this->window_surface_ptr_)
+        throw std::runtime_error(std::string(SDL_GetError()));
+
+    this->rectangle_ = { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED ,30,30 };
+    int IMG_Blit = SDL_BlitScaled(this->image_ptr_, NULL, this->window_surface_ptr_, &this->rectangle_);
+    if (IMG_Blit != 0)
+        throw std::runtime_error("Blitzing error! "
+            "SDL_image Error: " +
+            std::string(SDL_GetError()));
 }
 animal::~animal()
 {
@@ -44,45 +51,51 @@ animal::~animal()
 }
 void animal::draw()
 {
-    SDL_BlitScaled(this->image_ptr_,NULL,this->window_surface_ptr_, this->rectangle_);
+    SDL_BlitScaled(this->image_ptr_,NULL,this->window_surface_ptr_, &this->rectangle_);
 }
 
 //class ground
 
-sheep::sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, SDL_Rect* rectangle, int positionX_, int positionY_) :animal(file_path, window_surface_ptr, rectangle)
+sheep::sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX_, int positionY_) :animal(file_path, window_surface_ptr)
 {
     this->positionX = positionX_;
     this->positionY = positionY_;
 }
-sheep::~sheep() 
-{
-    SDL_FreeSurface(this->window_surface_ptr_);
-    SDL_FreeSurface(this->image_ptr_);
-    delete& rectangle_;
-}
+//sheep::~sheep() 
+//{
+//    animal::~animal();
+//}
 
-ground::ground() { ; }
 ground::ground(SDL_Surface* window_surface_ptr)
 {
-    window_surface_ptr_ = window_surface_ptr;
+    this->window_surface_ptr_ = window_surface_ptr;
+    Uint32 color = SDL_MapRGB(this->window_surface_ptr_->format, 0, 255, 0);
+    SDL_FillRect(window_surface_ptr_, NULL, color);
+    this->rectangle = { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,frame_width, frame_height };
     std::vector<animal*> animalList = {};
-
-
 }
 ground::~ground()
 {
     SDL_FreeSurface(window_surface_ptr_);
     delete & animalList;
 }
-void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr,SDL_Rect* rectangle)
+void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
 {
-    animalList.push_back(&animal(file_path, window_surface_ptr,rectangle));
+    animalList.push_back(&animal(file_path, window_surface_ptr));
 }
 void ground::update()
 {
 }
 application::application(unsigned n_sheep, unsigned n_wolf)
 {
+    window_ptr_ = SDL_CreateWindow("fenetre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, frame_width, frame_height, SDL_WINDOW_SHOWN);
+    if (!window_ptr_)
+        throw std::runtime_error(std::string(SDL_GetError()));
+    window_surface_ptr_ = SDL_GetWindowSurface(window_ptr_);
+    if (!window_surface_ptr_)
+    {
+        throw std::runtime_error(std::string(SDL_GetError()));
+    }
     ground_ = ground(window_surface_ptr_);
 
 }
@@ -97,13 +110,30 @@ application::~application()
 }
 int application::loop(unsigned period)
 {
-    auto currentTime = SDL_GetTicks();
+    /*auto currentTime = SDL_GetTicks();
     while (currentTime < period)
     {
         SDL_Delay(20);
         SDL_UpdateWindowSurface(window_ptr_);
     }
     
+    return 0;*/
+    this->ground_.update();
+
+    SDL_UpdateWindowSurface(window_ptr_);
+
+    auto start = SDL_GetTicks();
+
+    SDL_Event e;
+    bool quit = false;
+    while (!quit && (SDL_GetTicks() - start < period)) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+                break;
+            }
+        }
+    }
     return 0;
 }
 
