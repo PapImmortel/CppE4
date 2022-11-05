@@ -32,6 +32,7 @@ private:
     SDL_Rect rectangle_;
     int positionX_;
     int positionY_;
+    int speed = 1;
     // todo: Attribute(s) to define its position
 
 public:
@@ -39,6 +40,9 @@ public:
     animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY);
     // todo: The constructor has to load the sdl_surface that corresponds to the
     // texture
+    void Deplacement(int px, int pY);
+    int getPosX();
+    int getPosY();
     virtual ~animal(); // todo: Use the destructor to release memory and "clean up
                // behind you"
 
@@ -54,20 +58,34 @@ public:
 // class sheep, derived from animal
 class sheep : public animal {
 private:
-    
+    int directionX=1;
+    int directionY=1;
 
 public:
   // todo                                                                             
   // Ctor
   // Dtor
   // implement functions that are purely virtual in base class
-    sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY);
+    sheep(){};
+    sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY);
     ~sheep();
-    //void move() override;
+    void move();
 };
+
 
 // Insert here:
 // class wolf, derived from animal
+class wolf : public animal {
+private:
+
+public: // todo
+    wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
+    wolf() {}
+    ~wolf();
+    //void move();
+};
+
+
 // Use only sheep at first. Once the application works
 // for sheep you can add the wolves
 
@@ -78,14 +96,16 @@ private:
   // Attention, NON-OWNING ptr, again to the screen
     SDL_Surface* window_surface_ptr_;
     SDL_Rect rectangle;
+    sheep mout;
+    wolf lou;
     std::vector<animal*> animalList;
-
+    Uint32 color;
 public:
     ground(){};
 
     ground(SDL_Surface* window_surface_ptr); // todo: Ctor
     ~ground(); // todo: Dtor, again for clean up (if necessary)
-    void add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY); // todo: Add an animal
+    void add_animal(animal * newAnimal); // todo: Add an animal
     void update(); // todo: "refresh the screen": Move animals and draw them
     // Possibly other methods, depends on your implementation
 };

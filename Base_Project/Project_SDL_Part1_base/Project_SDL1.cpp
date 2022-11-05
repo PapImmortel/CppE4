@@ -28,6 +28,8 @@ void init() {
 animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY)
 {
 
+    this->positionX_ = positionX;
+    this->positionY_ = positionY;
 
     this->image_ptr_ = IMG_Load(file_path.c_str());
     if (!this->image_ptr_)
@@ -36,30 +38,61 @@ animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr, in
     if (!this->window_surface_ptr_)
         throw std::runtime_error(std::string(SDL_GetError()));
 
-    this->rectangle_ = { 0, 0 ,30,30 };
-    if (SDL_BlitSurface(this->image_ptr_, NULL, this->window_surface_ptr_, &this->rectangle_))
-        throw std::runtime_error("Could not apply texture.");
-    this->positionX_ = positionX;
-    this->positionY_ = positionY;
+    this->rectangle_ = { this->positionX_, this->positionY_ ,30,30 };
 
 }
 animal::~animal()
 {
-    SDL_FreeSurface(this->window_surface_ptr_);
-    SDL_FreeSurface(this->image_ptr_);
+    /*SDL_FreeSurface(this->window_surface_ptr_);
+    SDL_FreeSurface(this->image_ptr_);*/
 }
 void animal::draw()
 {
+    this->rectangle_ = { this->positionX_, this->positionY_ ,30,30 };
     SDL_BlitScaled(this->image_ptr_,NULL,this->window_surface_ptr_, &this->rectangle_);
 }
+void animal::Deplacement(int pX, int pY)
+{
+    this->positionX_ += pX;
+    this->positionY_ += pY;
 
+}
+int animal::getPosX()
+{
+    return this->positionX_;
+}
+int animal::getPosY()
+{
+    return this->positionY_;
+}
 //class ground
 
-sheep::sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY) :animal(file_path, window_surface_ptr,positionX,positionY)
+sheep::sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY) :animal("sheep.png", window_surface_ptr, positionX, positionY)
+{
+    int directionX = 1;
+    int directionY = 1;
+}
+sheep::~sheep() 
+{
+}
+
+void sheep::move()
+{
+    if (this->directionX + getPosX() <= 0 || this->directionX + getPosX() >= frame_width)
+    {
+        this->directionX = -this->directionX;
+    }
+    if (this->directionY + getPosY() <= 0 || this->directionY + getPosY() >= frame_height)
+    {
+        this->directionY = -this->directionY;
+    }
+    Deplacement(this->directionX, this->directionY);
+}
+wolf::wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY) : animal("wolf.png", window_surface_ptr, positionX, positionY)
 {
 
 }
-sheep::~sheep() 
+wolf::~wolf()
 {
 }
 
@@ -70,27 +103,42 @@ ground::ground(SDL_Surface* window_surface_ptr)
     {
         throw std::runtime_error(std::string(SDL_GetError()));
     }
-    Uint32 color = SDL_MapRGB(this->window_surface_ptr_->format, 0, 255, 0);
+    this->color = SDL_MapRGB(this->window_surface_ptr_->format, 0, 255, 0);
     SDL_FillRect(window_surface_ptr_, NULL, color);
     this->rectangle = { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,frame_width, frame_height };
     std::vector<animal*> animalList = {};
+    this->lou = wolf(this->window_surface_ptr_, 1000, 100);
+    this->mout = sheep(this->window_surface_ptr_, 0, 100);
+
 }
 ground::~ground()
 {
     SDL_FreeSurface(window_surface_ptr_);
-    while (!animalList.empty())
+   while (!animalList.empty())
     {
-        delete animalList.back();
+        delete &animalList.back();
         animalList.pop_back();
     }
 }
-void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY)
+void ground::add_animal(animal* newAnimal)
 {
-    animalList.push_back(&animal(file_path, window_surface_ptr, positionX, positionY));
+    animalList.push_back(newAnimal);
 }
 void ground::update()
 {
-    ;
+    SDL_FillRect(window_surface_ptr_, NULL, this->color);
+    for (auto animal_ : animalList)
+    {
+        
+        
+    }
+    
+
+    this->mout.move();
+    this->lou.Deplacement(-1, 1);
+    this->lou.draw();
+
+    this->mout.draw();
 }
 application::application(unsigned n_sheep, unsigned n_wolf)
 {
@@ -103,6 +151,7 @@ application::application(unsigned n_sheep, unsigned n_wolf)
         throw std::runtime_error(std::string(SDL_GetError()));
     }
     ground_ = ground(window_surface_ptr_);
+    ground_.add_animal( &sheep(window_surface_ptr_, 100, 100));
 
 }
 
@@ -139,6 +188,8 @@ int application::loop(unsigned period)
                 break;
             }
         }
+        ground_.update();
+        SDL_UpdateWindowSurface(window_ptr_);
     }
     return 0;
 }
