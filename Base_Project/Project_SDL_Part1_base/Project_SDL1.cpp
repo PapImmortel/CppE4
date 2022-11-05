@@ -36,18 +36,14 @@ animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
     if (!this->window_surface_ptr_)
         throw std::runtime_error(std::string(SDL_GetError()));
 
-    this->rectangle_ = { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED ,30,30 };
-    int IMG_Blit = SDL_BlitScaled(this->image_ptr_, NULL, this->window_surface_ptr_, &this->rectangle_);
-    if (IMG_Blit != 0)
-        throw std::runtime_error("Blitzing error! "
-            "SDL_image Error: " +
-            std::string(SDL_GetError()));
+    this->rectangle_ = { 0, 0 ,30,30 };
+    if (SDL_BlitSurface(this->image_ptr_, NULL, this->window_surface_ptr_, &this->rectangle_))
+        throw std::runtime_error("Could not apply texture.");
 }
 animal::~animal()
 {
     SDL_FreeSurface(this->window_surface_ptr_);
     SDL_FreeSurface(this->image_ptr_);
-    delete & rectangle_;
 }
 void animal::draw()
 {
@@ -68,6 +64,10 @@ sheep::~sheep()
 ground::ground(SDL_Surface* window_surface_ptr)
 {
     this->window_surface_ptr_ = window_surface_ptr;
+    if (!window_surface_ptr_)
+    {
+        throw std::runtime_error(std::string(SDL_GetError()));
+    }
     Uint32 color = SDL_MapRGB(this->window_surface_ptr_->format, 0, 255, 0);
     SDL_FillRect(window_surface_ptr_, NULL, color);
     this->rectangle = { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,frame_width, frame_height };
@@ -76,7 +76,7 @@ ground::ground(SDL_Surface* window_surface_ptr)
 ground::~ground()
 {
     SDL_FreeSurface(window_surface_ptr_);
-    delete & animalList;
+    //delete & animalList;
 }
 void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
 {
@@ -84,6 +84,7 @@ void ground::add_animal(const std::string& file_path, SDL_Surface* window_surfac
 }
 void ground::update()
 {
+    ;
 }
 application::application(unsigned n_sheep, unsigned n_wolf)
 {

@@ -6,10 +6,10 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Starting up the application" << std::endl;
 
-  if (argc != 4)
+  /*if (argc != 4)
     throw std::runtime_error("Need three arguments - "
                              "number of sheep, number of wolves, "
-                             "simulation time\n");
+                             "simulation time\n");*/
 
   init();
 
