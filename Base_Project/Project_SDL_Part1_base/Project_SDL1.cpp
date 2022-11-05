@@ -25,25 +25,43 @@ void init() {
 
 
 //class animal
-animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
+animal::animal()
 {
-    window_surface_ptr_ = window_surface_ptr;
-    image_ptr_ = load_surface_for(file_path,window_surface_ptr);
+    ;
+}
+animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr,SDL_Rect* rectangle)
+{
+    this->window_surface_ptr_ = window_surface_ptr;
+    this->image_ptr_ = IMG_Load(file_path.c_str());
+    this->rectangle_ = rectangle;
 
 }
 animal::~animal()
 {
-    SDL_FreeSurface(window_surface_ptr_);
-    delete image_ptr_;
-
+    SDL_FreeSurface(this->window_surface_ptr_);
+    SDL_FreeSurface(this->image_ptr_);
+    delete & rectangle_;
 }
 void animal::draw()
 {
-    SDL_Surface(window_surface_ptr_);
+    SDL_BlitScaled(this->image_ptr_,NULL,this->window_surface_ptr_, this->rectangle_);
 }
 
 //class ground
 
+sheep::sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, SDL_Rect* rectangle, int positionX_, int positionY_) :animal(file_path, window_surface_ptr, rectangle)
+{
+    this->positionX = positionX_;
+    this->positionY = positionY_;
+}
+sheep::~sheep() 
+{
+    SDL_FreeSurface(this->window_surface_ptr_);
+    SDL_FreeSurface(this->image_ptr_);
+    delete& rectangle_;
+}
+
+ground::ground() { ; }
 ground::ground(SDL_Surface* window_surface_ptr)
 {
     window_surface_ptr_ = window_surface_ptr;
@@ -56,9 +74,9 @@ ground::~ground()
     SDL_FreeSurface(window_surface_ptr_);
     delete & animalList;
 }
-void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr)
+void ground::add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr,SDL_Rect* rectangle)
 {
-    animalList.push_back(&animal(file_path, window_surface_ptr));
+    animalList.push_back(&animal(file_path, window_surface_ptr,rectangle));
 }
 void ground::update()
 {
@@ -86,7 +104,7 @@ int application::loop(unsigned period)
         SDL_UpdateWindowSurface(window_ptr_);
     }
     
-
+    return 0;
 }
 
 namespace {

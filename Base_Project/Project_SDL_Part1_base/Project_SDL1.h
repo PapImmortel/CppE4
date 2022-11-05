@@ -25,20 +25,22 @@ void init();
 
 class animal {
 private:
-  SDL_Surface* window_surface_ptr_; // ptr to the surface on which we want the
+    SDL_Surface* window_surface_ptr_; // ptr to the surface on which we want the
                                     // animal to be drawn, also non-owning
-  SDL_Surface* image_ptr_; // The texture of the sheep (the loaded image), use
+    SDL_Surface* image_ptr_; // The texture of the sheep (the loaded image), use
                            // load_surface_for
-  // todo: Attribute(s) to define its position
+    SDL_Rect* rectangle_;
+    // todo: Attribute(s) to define its position
 
 public:
-    animal(const std::string& file_path, SDL_Surface* window_surface_ptr){};
+    animal();
+    animal(const std::string& file_path, SDL_Surface* window_surface_ptr, SDL_Rect* rectangle);
     // todo: The constructor has to load the sdl_surface that corresponds to the
     // texture
-    ~animal(){}; // todo: Use the destructor to release memory and "clean up
+    virtual ~animal(); // todo: Use the destructor to release memory and "clean up
                // behind you"
 
-    void draw(){}; // todo: Draw the animal on the screen <-> window_surface_ptr.
+    void draw(); // todo: Draw the animal on the screen <-> window_surface_ptr.
                  // Note that this function is not virtual, it does not depend
                  // on the static type of the instance
 
@@ -54,16 +56,14 @@ private:
     int positionY;
     SDL_Surface* window_surface_ptr_;
     SDL_Surface* image_ptr_;
-  // todo
+    SDL_Rect* rectangle_;
+  // todo                                                                             
   // Ctor
   // Dtor
   // implement functions that are purely virtual in base class
-    sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX_, int positionY_) : animal(file_path,window_surface_ptr)
-    {
-        positionX = positionX_;
-        positionY = positionY_;
-    }
-
+    sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, SDL_Rect* rectangle, int positionX_, int positionY_);
+    virtual ~sheep() override;
+    void move() override;
 };
 
 // Insert here:
@@ -76,33 +76,35 @@ private:
 class ground {
 private:
   // Attention, NON-OWNING ptr, again to the screen
-  SDL_Surface* window_surface_ptr_;
+    SDL_Surface* window_surface_ptr_;
 
-  std::vector<animal*> animalList;
+    std::vector<animal*> animalList;
 
 public:
-  ground(SDL_Surface* window_surface_ptr); // todo: Ctor
-  ~ground(){}; // todo: Dtor, again for clean up (if necessary)
-  void add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr); // todo: Add an animal
-  void update(); // todo: "refresh the screen": Move animals and draw them
-  // Possibly other methods, depends on your implementation
+    ground::ground();
+
+    ground(SDL_Surface* window_surface_ptr); // todo: Ctor
+    ~ground(); // todo: Dtor, again for clean up (if necessary)
+    void add_animal(const std::string& file_path, SDL_Surface* window_surface_ptr,SDL_Rect* rectangle); // todo: Add an animal
+    void update(); // todo: "refresh the screen": Move animals and draw them
+    // Possibly other methods, depends on your implementation
 };
 
 // The application class, which is in charge of generating the window
 class application {
 private:
-  // The following are OWNING ptrs
-  SDL_Window* window_ptr_;
-  SDL_Surface* window_surface_ptr_;
-  SDL_Event window_event_;
-  ground ground_;
-  // Other attributes here, for example an instance of ground
+    // The following are OWNING ptrs
+    SDL_Window* window_ptr_;
+    SDL_Surface* window_surface_ptr_;
+    SDL_Event window_event_;
+    ground ground_;
+    // Other attributes here, for example an instance of ground
 
 public:
-  application(unsigned n_sheep, unsigned n_wolf); // Ctor
-  ~application();                                 // dtor
+    application(unsigned n_sheep, unsigned n_wolf); // Ctor
+    ~application();                                 // dtor
 
-  int loop(unsigned period); // main loop of the application.
+    int loop(unsigned period); // main loop of the application.
                              // this ensures that the screen is updated
                              // at the correct rate.
                              // See SDL_GetTicks() and SDL_Delay() to enforce a
