@@ -61,10 +61,9 @@ sheep::sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int 
     this->positionX = positionX_;
     this->positionY = positionY_;
 }
-//sheep::~sheep() 
-//{
-//    animal::~animal();
-//}
+sheep::~sheep() 
+{
+}
 
 ground::ground(SDL_Surface* window_surface_ptr)
 {

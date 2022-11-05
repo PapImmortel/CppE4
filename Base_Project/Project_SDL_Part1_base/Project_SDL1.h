@@ -61,7 +61,7 @@ public:
   // Dtor
   // implement functions that are purely virtual in base class
     sheep(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX_, int positionY_);
-    //virtual ~sheep() override;
+    ~sheep();
     //void move() override;
 };
 
