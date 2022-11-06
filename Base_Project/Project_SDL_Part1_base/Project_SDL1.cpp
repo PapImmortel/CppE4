@@ -30,7 +30,8 @@ animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr, in
 
     this->positionX_ = positionX;
     this->positionY_ = positionY;
-
+    this->setSpeed(1);
+    this->setVivant(true);
     this->image_ptr_ = IMG_Load(file_path.c_str());
     if (!this->image_ptr_)
         throw std::runtime_error("Could not load image");
@@ -98,7 +99,18 @@ int animal::getSpeed()
 {
     return this->speed_;
 }
-//class ground
+SDL_Rect animal::getRectangle()
+{
+    return this->rectangle_;
+}
+void animal::setVivant(bool vivant)
+{
+    this->vivant_ = vivant;
+}
+bool animal::getVivant()
+{
+    return vivant_;
+}
 
 sheep::sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY) :animal("sheep.png", window_surface_ptr, positionX, positionY)
 {
@@ -138,6 +150,7 @@ void wolf::move()
     Deplacement(getDirectionX(), getDirectionY());
 }
 
+//class ground
 
 ground::ground(SDL_Surface* window_surface_ptr)
 {
@@ -159,8 +172,9 @@ ground::~ground()
     SDL_FreeSurface(window_surface_ptr_);
    while (!animalList.empty())
     {
-        delete &animalList.back();
-        animalList.pop_back();
+       
+       animalList.erase(animalList.begin());
+       
     }
 }
 void ground::add_animal(std::shared_ptr<animal> newAnimal)
@@ -174,13 +188,13 @@ void ground::update()
 
     for (auto&& animal_ : animalList)
     {
-        if (animal_->getImage() == "sheep.png")
+        if (animal_->getImage() == "sheep.png" && animal_->getVivant())
         {
             int procheX = 101;
             int procheY = 101;
             for (auto&& animal2_ : animalList)
             {
-                if (animal2_->getImage() == "wolf.png")
+                if (animal2_->getImage() == "wolf.png" && animal2_->getVivant())
                 {
                     if (abs(animal2_->getPosX() - animal_->getPosX()) <=  100)
                     {
@@ -240,19 +254,27 @@ void ground::update()
 
                 }
             }
+
         }
-        else if (animal_->getImage() == "wolf.png")
+        else if (animal_->getImage() == "wolf.png" && animal_->getVivant())
         {
             int procheX = frame_width;
             int procheY = frame_height;
             for (auto&& animal2_ : animalList)
             {
-                if (animal2_->getImage() == "sheep.png")
+                if (animal2_->getImage() == "sheep.png" && animal2_->getVivant())
                 {
-                    if (abs(animal2_->getPosX() - animal_->getPosX()) + abs(animal2_->getPosY() - animal_->getPosY()) <= abs(procheX) + abs(procheY))
+                    if (SDL_HasIntersection(&animal_->getRectangle(), &animal2_->getRectangle()))
                     {
-                        procheX = animal2_->getPosX() - animal_->getPosX();
-                        procheY = animal2_->getPosY() - animal_->getPosY();
+                        animal2_->setVivant(false);
+                    }
+                    else
+                    {
+                        if (abs(animal2_->getPosX() - animal_->getPosX()) + abs(animal2_->getPosY() - animal_->getPosY()) <= abs(procheX) + abs(procheY))
+                        {
+                            procheX = animal2_->getPosX() - animal_->getPosX();
+                            procheY = animal2_->getPosY() - animal_->getPosY();
+                        }
                     }
 
 
@@ -303,20 +325,41 @@ void ground::update()
                 }
             }
 
-
         }
+        
 
         animal_->move();
         animal_->draw();
 
+            
+        
+        
+
     }
-    
+    std::vector<int> animauxMorts;
 
-    /*this->mout.move();
-    this->lou.Deplacement(-1, 1);
-    this->lou.draw();
 
-    this->mout.draw();*/
+    int compteur = 0;
+    for (auto&& animal_ : animalList)
+    {
+        if (!animal_->getVivant())
+        {
+            animauxMorts.push_back(compteur);
+
+        }
+        compteur += 1;
+    }
+
+    for (int i = 0; i < size(animauxMorts); i++)
+    {
+        animalList.erase(animalList.begin() + animauxMorts[-i]);
+    }
+
+    while (!animauxMorts.empty())
+    {
+        animauxMorts.pop_back();
+    }
+
 }
 application::application(unsigned n_sheep, unsigned n_wolf)
 {
@@ -331,8 +374,8 @@ application::application(unsigned n_sheep, unsigned n_wolf)
     ground_ = ground(window_surface_ptr_);
     ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 0, 100));
     ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 500, 100));
-
     ground_.add_animal(std::make_shared<wolf>(window_surface_ptr_, 1000, 100));
+
 
 }
 
@@ -342,7 +385,6 @@ application::~application()
     SDL_DestroyWindow(window_ptr_);
     delete &window_event_;
     delete &ground_;
-
 }
 int application::loop(unsigned period)
 {

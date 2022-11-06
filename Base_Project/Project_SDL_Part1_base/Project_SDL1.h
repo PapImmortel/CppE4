@@ -36,7 +36,7 @@ private:
     std::string image_;
     int directionX_;
     int directionY_;
-
+    bool vivant_;
     // todo: Attribute(s) to define its position
 
 public:
@@ -53,6 +53,10 @@ public:
     void setDirectionY(int directionY);
     int getDirectionX();
     int getDirectionY();
+    SDL_Rect getRectangle();
+    void setVivant(bool vivant);
+    bool getVivant();
+
     void setSpeed(int speed);
     int getSpeed();
 
