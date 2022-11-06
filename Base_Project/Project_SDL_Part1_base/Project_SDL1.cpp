@@ -118,7 +118,7 @@ void sheep::move()
     }
     if (getDirectionY() + getPosY() <= 0 || getDirectionY() + getPosY() >= frame_height)
     {
-        setDirectionX(-getDirectionY());
+        setDirectionY(-getDirectionY());
     }
     Deplacement(getDirectionX(), getDirectionY());
 }
