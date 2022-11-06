@@ -330,6 +330,8 @@ application::application(unsigned n_sheep, unsigned n_wolf)
     }
     ground_ = ground(window_surface_ptr_);
     ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 0, 100));
+    ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 500, 100));
+
     ground_.add_animal(std::make_shared<wolf>(window_surface_ptr_, 1000, 100));
 
 }
