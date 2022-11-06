@@ -112,11 +112,11 @@ sheep::~sheep()
 
 void sheep::move()
 {
-    if (getDirectionX() + getPosX() <= 0 || getDirectionX() + getPosX() >= frame_width)
+    if (getDirectionX() + getPosX() <= 0 || getDirectionX() + getPosX() >= frame_width-30)
     {
         setDirectionX(-getDirectionX());
     }
-    if (getDirectionY() + getPosY() <= 0 || getDirectionY() + getPosY() >= frame_height)
+    if (getDirectionY() + getPosY() <= 0 || getDirectionY() + getPosY() >= frame_height-30)
     {
         setDirectionY(-getDirectionY());
     }
