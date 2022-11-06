@@ -32,7 +32,11 @@ private:
     SDL_Rect rectangle_;
     int positionX_;
     int positionY_;
-    int speed = 1;
+    int speed_ = 1;
+    std::string image_;
+    int directionX_;
+    int directionY_;
+
     // todo: Attribute(s) to define its position
 
 public:
@@ -43,6 +47,15 @@ public:
     void Deplacement(int px, int pY);
     int getPosX();
     int getPosY();
+    std::string getImage();
+    void setImage(std::string image);
+    void setDirectionX(int directionX);
+    void setDirectionY(int directionY);
+    int getDirectionX();
+    int getDirectionY();
+    void setSpeed(int speed);
+    int getSpeed();
+
     virtual ~animal(); // todo: Use the destructor to release memory and "clean up
                // behind you"
 
@@ -58,9 +71,7 @@ public:
 // class sheep, derived from animal
 class sheep : public animal {
 private:
-    int directionX=1;
-    int directionY=1;
-
+    
 public:
   // todo                                                                             
   // Ctor
@@ -82,7 +93,7 @@ public: // todo
     wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
     wolf() {}
     ~wolf();
-    //void move();
+    void move();
 };
 
 
@@ -96,8 +107,8 @@ private:
   // Attention, NON-OWNING ptr, again to the screen
     SDL_Surface* window_surface_ptr_;
     SDL_Rect rectangle;
-    sheep mout;
-    wolf lou;
+    /*sheep mout;
+    wolf lou;*/
     std::vector<std::shared_ptr<animal>> animalList;
     Uint32 color;
 public:
