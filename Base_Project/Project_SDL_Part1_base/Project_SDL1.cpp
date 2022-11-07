@@ -452,15 +452,35 @@ void ground::update()
         }
         pCompteur += 1;
     }
-
+    if (size(animauxMorts) != 0)
+    {
+        std::cout << size(animauxMorts)<<"hey"<<size(animalList)<<"vrai taille";
+        std::cout << "CEST PARTI";
+        for (auto&& animal2_ : animauxMorts)
+        {
+            std::cout << animal2_<<"p";
+        }
+    }
     for (int i = 0; i < size(animauxMorts); i++)
     {
-        animalList.erase(animalList.begin() + animauxMorts[-i]);
+        std::cout << animauxMorts[i] - i<<"la position";
+        std::cout << size(animalList) << "la positionTAillle";
+        for (auto&& animal_ : animalList)
+        {
+            std::cout << "UnePlace";
+        }
+
+        animalList.erase(animalList.begin() + animauxMorts[i] - i);
+        std::cout << "bug";
+        
+       
     }
 
     while (!animauxMorts.empty())
     {
         animauxMorts.pop_back();
+        std::cout << animauxMorts.size() << "PUT";
+
     }
 
     //reproduction
@@ -480,6 +500,7 @@ void ground::update()
 
     for (int i = 0; i < size(animauxNai); i++)
     {
+        std::cout << "BAISE";
         add_animal((std::make_shared<sheep>(window_surface_ptr_, animalList[animauxNai[i]]->getPosX(), animalList[animauxNai[i]]->getPosY())));
     }
     while (!animauxNai.empty())
@@ -498,9 +519,15 @@ application::application(unsigned n_sheep, unsigned n_wolf)
         throw std::runtime_error(std::string(SDL_GetError()));
     }
     ground_ = ground(window_surface_ptr_);
+
     ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 0, 100));
     ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 500, 100));
-    //ground_.add_animal(std::make_shared<wolf>(window_surface_ptr_, 1000, 100));
+    ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 500, 100));
+
+
+
+
+    ground_.add_animal(std::make_shared<wolf>(window_surface_ptr_, 1000, 100));
     //ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, 1000, 100));
 
 
