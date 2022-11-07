@@ -112,10 +112,13 @@ bool animal::getVivant()
     return vivant_;
 }
 
+
 sheep::sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY) :animal("sheep.png", window_surface_ptr, positionX, positionY)
 {
     this->setDirectionX(1 * this->getSpeed());
     this->setDirectionY(1 * this->getSpeed());
+    this->cdCop = 0;
+    this->Baby = false;
     setImage("sheep.png");
 }
 sheep::~sheep() 
@@ -134,22 +137,88 @@ void sheep::move()
     }
     Deplacement(getDirectionX(), getDirectionY());
 }
+bool sheep::HasBaby()
+{
+    return this->Baby;
+}
+void sheep::changeBaby()
+{
+    this->Baby = !(this->Baby);
+}
+void sheep::BabyFalse()
+{
+    this->Baby = false;
+}
+void sheep::augmentCd(int n)
+{
+    if (n > 0)
+    {
+        this->cdCop += n;
+    }
+}
+void sheep::copBaisse(int n)
+{
+
+    if (this->cdCop >= n)
+    {
+        this->cdCop -= n;
+    }
+    else if (this->cdCop > 0 && this->cdCop < n)
+    {
+        this->cdCop = 0;
+    }
+    if (this->cdCop == 0)
+    {
+        return;
+    }
+
+}
+int sheep::getCdCop()
+{
+
+    return this->cdCop;
+}
 wolf::wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY) : animal("wolf.png", window_surface_ptr, positionX, positionY)
 {
     this->setDirectionX(1 * this->getSpeed());
     this->setDirectionY(1 * this->getSpeed());
+    this->setFood(1500);
+
     setImage("wolf.png");
 
 }
 wolf::~wolf()
 {
 }
-
 void wolf::move()
 {
     Deplacement(getDirectionX(), getDirectionY());
 }
-
+void wolf::setFood(int food)
+{
+    food_ = food;
+}
+int wolf::getFood()
+{
+    return food_;
+}
+//dog::dog(SDL_Surface* window_surface_ptr, int positionX, int positionY) : animal("paysan.png", window_surface_ptr, positionX, positionY)
+//{
+//    this->setDirectionX(1 * this->getSpeed());
+//    this->setDirectionY(1 * this->getSpeed());
+//    this->setFood(1500);
+//
+//    setImage("paysan.png");
+//
+//}
+//dog::~dog()
+//{
+//}
+//
+//void dog::move()
+//{
+//    Deplacement(getDirectionX(), getDirectionY());
+//}
 //class ground
 
 ground::ground(SDL_Surface* window_surface_ptr)
@@ -185,33 +254,59 @@ void ground::add_animal(std::shared_ptr<animal> newAnimal)
 void ground::update()
 {
     SDL_FillRect(window_surface_ptr_, NULL, this->color);
-
+    int compteur = 0;
+    
     for (auto&& animal_ : animalList)
     {
+        animal_->BabyFalse();
+        compteur += 1;
+
+
         if (animal_->getImage() == "sheep.png" && animal_->getVivant())
         {
+            
+            //
             int procheX = 101;
             int procheY = 101;
-            for (auto&& animal2_ : animalList)
+            for (auto&& partenaire_ : animalList)
             {
-                if (animal2_->getImage() == "wolf.png" && animal2_->getVivant())
+                if (partenaire_->getImage() == "wolf.png" && partenaire_->getVivant())
                 {
-                    if (abs(animal2_->getPosX() - animal_->getPosX()) <=  100)
+                    if (abs(partenaire_->getPosX() - animal_->getPosX()) <=  100)
                     {
-                        if (abs(animal2_->getPosY() - animal_->getPosY()) <= 100) 
+                        if (abs(partenaire_->getPosY() - animal_->getPosY()) <= 100) 
                         {
-                            if (abs(animal2_->getPosX() - animal_->getPosX()) <= abs(procheX))
+                            if (abs(partenaire_->getPosX() - animal_->getPosX()) <= abs(procheX))
                             {
-                                procheX = animal2_->getPosX() - animal_->getPosX();
+                                procheX = partenaire_->getPosX() - animal_->getPosX();
                             }
-                            if (abs(animal2_->getPosY() - animal_->getPosY()) <= abs(procheY))
+                            if (abs(partenaire_->getPosY() - animal_->getPosY()) <= abs(procheY))
                             {
-                                procheY = animal2_->getPosY() - animal_->getPosY();
+                                procheY = partenaire_->getPosY() - animal_->getPosY();
                             }
 
                         }
                     }
                 }
+                else if (animal_->getCdCop() == 0)
+                {
+                    if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()) && partenaire_ != animal_)
+                    {
+                        if (partenaire_->getImage() == "sheep.png")
+                        {
+                            if (partenaire_->getCdCop() == 0)
+                            {
+                                animal_->changeBaby();
+                                animal_->augmentCd(181);
+                                partenaire_->augmentCd(181);
+
+                            }
+
+
+                        }
+                    }
+                }
+                animal_->copBaisse(1);
             }
             if (procheX < 0)
             {
@@ -260,20 +355,21 @@ void ground::update()
         {
             int procheX = frame_width;
             int procheY = frame_height;
-            for (auto&& animal2_ : animalList)
+            for (auto&& partenaire_ : animalList)
             {
-                if (animal2_->getImage() == "sheep.png" && animal2_->getVivant())
+                if (partenaire_->getImage() == "sheep.png" && partenaire_->getVivant())
                 {
-                    if (SDL_HasIntersection(&animal_->getRectangle(), &animal2_->getRectangle()))
+                    if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()))
                     {
-                        animal2_->setVivant(false);
+                        partenaire_->setVivant(false);
+                        animal_->setFood(1500);
                     }
                     else
                     {
-                        if (abs(animal2_->getPosX() - animal_->getPosX()) + abs(animal2_->getPosY() - animal_->getPosY()) <= abs(procheX) + abs(procheY))
+                        if (abs(partenaire_->getPosX() - animal_->getPosX()) + abs(partenaire_->getPosY() - animal_->getPosY()) <= abs(procheX) + abs(procheY))
                         {
-                            procheX = animal2_->getPosX() - animal_->getPosX();
-                            procheY = animal2_->getPosY() - animal_->getPosY();
+                            procheX = partenaire_->getPosX() - animal_->getPosX();
+                            procheY = partenaire_->getPosY() - animal_->getPosY();
                         }
                     }
 
@@ -324,7 +420,11 @@ void ground::update()
                     animal_->setDirectionY(1 * animal_->getSpeed());
                 }
             }
-
+            animal_->setFood(animal_->getFood() - 1);
+            if (animal_->getFood() <= 0)
+            {
+                animal_->setVivant(false);
+            }
         }
         
 
@@ -336,10 +436,11 @@ void ground::update()
         
 
     }
+    //morts des animaux
     std::vector<int> animauxMorts;
 
-
-    int compteur = 0;
+    
+    compteur = 0;
     for (auto&& animal_ : animalList)
     {
         if (!animal_->getVivant())
@@ -360,6 +461,30 @@ void ground::update()
         animauxMorts.pop_back();
     }
 
+    //reproduction
+    
+    int cpoComp = 0;
+    std::vector<int> animauxNai;
+    for (auto&& animal_ : animalList)
+    {
+        if (animal_->HasBaby())
+        {
+            animauxNai.push_back(cpoComp);
+
+        }
+        cpoComp += 1;
+    }
+
+
+    for (int i = 0; i < size(animauxNai); i++)
+    {
+
+        add_animal((std::make_shared<sheep>(window_surface_ptr_, animalList[animauxNai[i]]->getPosX(), animalList[animauxNai[i]]->getPosY())));
+    }
+    while (!animauxNai.empty())
+    {
+        animauxNai.pop_back();
+    }
 }
 application::application(unsigned n_sheep, unsigned n_wolf)
 {
@@ -374,7 +499,8 @@ application::application(unsigned n_sheep, unsigned n_wolf)
     ground_ = ground(window_surface_ptr_);
     ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 0, 100));
     ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 500, 100));
-    ground_.add_animal(std::make_shared<wolf>(window_surface_ptr_, 1000, 100));
+    //ground_.add_animal(std::make_shared<wolf>(window_surface_ptr_, 1000, 100));
+    //ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, 1000, 100));
 
 
 }

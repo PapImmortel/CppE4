@@ -32,11 +32,12 @@ private:
     SDL_Rect rectangle_;
     int positionX_;
     int positionY_;
-    int speed_ = 1;
+    int speed_;
     std::string image_;
     int directionX_;
     int directionY_;
     bool vivant_;
+
     // todo: Attribute(s) to define its position
 
 public:
@@ -59,6 +60,7 @@ public:
 
     void setSpeed(int speed);
     int getSpeed();
+    
 
     virtual ~animal(); // todo: Use the destructor to release memory and "clean up
                // behind you"
@@ -69,13 +71,23 @@ public:
 
     virtual void move(){}; // todo: Animals move around, but in a different
                              // fashion depending on which type of animal
+    virtual void setFood(int food) { };
+    virtual int getFood() { return 0; };
+    virtual int getCdCop() { return -1; };
+    virtual bool HasBaby() { return false; };
+    virtual void changeBaby() {};
+    virtual void BabyFalse() {};
+    virtual void copBaisse(int n) {};
+    virtual void augmentCd(int n) {};
 };
 
 // Insert here:
 // class sheep, derived from animal
 class sheep : public animal {
 private:
-    
+    int cdCop;
+    bool Baby;
+
 public:
   // todo                                                                             
   // Ctor
@@ -85,6 +97,12 @@ public:
     sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY);
     ~sheep();
     void move();
+    int getCdCop();
+    void copBaisse(int n);
+    void augmentCd(int n);
+    bool HasBaby() ;
+    void changeBaby();
+    void BabyFalse();
 };
 
 
@@ -92,14 +110,25 @@ public:
 // class wolf, derived from animal
 class wolf : public animal {
 private:
-
+    int food_;
 public: // todo
     wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
     wolf() {}
     ~wolf();
     void move();
+    void setFood(int food);
+    int getFood();
 };
-
+//class dog : public animal {
+//private:
+//    int food_;
+//public: // todo
+//    dog(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
+//    dog() {}
+//    ~dog();
+//    void move();
+//    
+//};
 
 // Use only sheep at first. Once the application works
 // for sheep you can add the wolves
