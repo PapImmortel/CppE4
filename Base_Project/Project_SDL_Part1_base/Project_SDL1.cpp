@@ -119,6 +119,7 @@ sheep::sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY) :ani
     this->setDirectionY(1 * this->getSpeed());
     this->cdCop = 0;
     this->Baby = false;
+
     setImage("sheep.png");
 }
 sheep::~sheep() 
@@ -258,7 +259,6 @@ void ground::update()
     
     for (auto&& animal_ : animalList)
     {
-        animal_->BabyFalse();
         compteur += 1;
 
 
@@ -266,15 +266,16 @@ void ground::update()
         {
             
             //
+            animal_->BabyFalse();
             int procheX = 101;
             int procheY = 101;
             for (auto&& partenaire_ : animalList)
             {
                 if (partenaire_->getImage() == "wolf.png" && partenaire_->getVivant())
                 {
-                    if (abs(partenaire_->getPosX() - animal_->getPosX()) <=  100)
+                    if (abs(partenaire_->getPosX() - animal_->getPosX()) <= 100)
                     {
-                        if (abs(partenaire_->getPosY() - animal_->getPosY()) <= 100) 
+                        if (abs(partenaire_->getPosY() - animal_->getPosY()) <= 100)
                         {
                             if (abs(partenaire_->getPosX() - animal_->getPosX()) <= abs(procheX))
                             {
@@ -292,7 +293,7 @@ void ground::update()
                 {
                     if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()) && partenaire_ != animal_)
                     {
-                        if (partenaire_->getImage() == "sheep.png")
+                        if (partenaire_->getImage() == "sheep.png" && partenaire_->getVivant())
                         {
                             if (partenaire_->getCdCop() == 0)
                             {
@@ -306,8 +307,9 @@ void ground::update()
                         }
                     }
                 }
-                animal_->copBaisse(1);
             }
+            animal_->copBaisse(1);
+            
             if (procheX < 0)
             {
                 animal_->setSpeed(3);
@@ -440,15 +442,15 @@ void ground::update()
     std::vector<int> animauxMorts;
 
     
-    compteur = 0;
+    int pCompteur = 0;
     for (auto&& animal_ : animalList)
     {
         if (!animal_->getVivant())
         {
-            animauxMorts.push_back(compteur);
+            animauxMorts.push_back(pCompteur);
 
         }
-        compteur += 1;
+        pCompteur += 1;
     }
 
     for (int i = 0; i < size(animauxMorts); i++)
@@ -478,7 +480,6 @@ void ground::update()
 
     for (int i = 0; i < size(animauxNai); i++)
     {
-
         add_animal((std::make_shared<sheep>(window_surface_ptr_, animalList[animauxNai[i]]->getPosX(), animalList[animauxNai[i]]->getPosY())));
     }
     while (!animauxNai.empty())
