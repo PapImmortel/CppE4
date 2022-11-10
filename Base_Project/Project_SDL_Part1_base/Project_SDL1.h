@@ -37,6 +37,7 @@ private:
     int directionX_;
     int directionY_;
     bool vivant_;
+    std::vector<std::string> flags_;
 
     // todo: Attribute(s) to define its position
 
@@ -48,8 +49,6 @@ public:
     void Deplacement(int px, int pY);
     int getPosX();
     int getPosY();
-    std::string getImage();
-    void setImage(std::string image);
     void setDirectionX(int directionX);
     void setDirectionY(int directionY);
     int getDirectionX();
@@ -60,7 +59,8 @@ public:
 
     void setSpeed(int speed);
     int getSpeed();
-    
+    void addFlag(std::string flag);
+    bool hasFlag(std::string flag);
 
     virtual ~animal(); // todo: Use the destructor to release memory and "clean up
                // behind you"
@@ -79,14 +79,11 @@ public:
     virtual void BabyFalse() {};
     virtual void copBaisse(int n) {};
     virtual void augmentCd(int n) {};
-    virtual bool getClicPress() { return false; };
-    virtual void setClicPress(bool clicPress) {};
     virtual void setDestination(int destinationX, int destinationY){};
     virtual int getDestinationX() { return 0; };
     virtual int getDestinationY() { return 0; };
     virtual void setPeur(int peur){};
     virtual int getPeur() { return 1; };
-
 };
 
 // Insert here:
@@ -123,7 +120,7 @@ private:
     int peur_;
 public: // todo
     wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
-    wolf() {}
+    wolf() {};
     ~wolf();
     void move();
     void setFood(int food);
@@ -133,16 +130,13 @@ public: // todo
 };
 class dog : public animal {
 private:
-    bool clicPress_;
     int destinationX;
     int destinationY;
 public: // todo
     dog(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
-    dog() {}
+    dog() {};
     ~dog();
     void move();
-    bool getClicPress();
-    void setClicPress(bool clicPress) ;
     void setDestination(int destinationX, int destinationY);
     int getDestinationX();
     int getDestinationY();
@@ -159,7 +153,6 @@ private:
     SDL_Rect rectangle_;
     int positionX_;
     int positionY_;
-    std::string image_;
     int directionX_;
     int directionY_;
     SDL_Event touche;
@@ -173,8 +166,6 @@ public:
     void draw();
     int getPosX();
     int getPosY();
-    std::string getImage();
-    void setImage(std::string image);
     void setDirectionX(int directionX);
     void setDirectionY(int directionY);
     int getDirectionX();
@@ -182,6 +173,7 @@ public:
     void setSpeed(int speed);
     int getSpeed();
     SDL_Rect getRectangle();
+    void setevent(SDL_Event ev);
 
 
 
@@ -210,6 +202,8 @@ public:
     void add_animal(std::shared_ptr<animal> newAnimal); // todo: Add an animal
     void update(); // todo: "refresh the screen": Move animals and draw them
     // Possibly other methods, depends on your implementation
+    void updatePlayer(SDL_Event ev);// todo: "refresh the screen": Move animals and draw them
+    void updateDogs(SDL_Event ev);
 };
 
 // The application class, which is in charge of generating the window

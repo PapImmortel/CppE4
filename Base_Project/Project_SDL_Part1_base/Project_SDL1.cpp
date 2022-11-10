@@ -67,14 +67,7 @@ int animal::getPosY()
     return this->positionY_;
 }
 
-std::string animal::getImage()
-{
-    return this->image_;
-}
-void animal::setImage(std::string image)
-{
-    this->image_ = image;
-}
+
 void animal::setDirectionX(int directionX)
 {
     this->directionX_ = directionX;
@@ -111,7 +104,22 @@ bool animal::getVivant()
 {
     return vivant_;
 }
+void animal::addFlag(std::string flag)
+{
+    this->flags_.push_back(flag);
+}
+bool animal::hasFlag(std::string flag)
+{
+    for (std::string f : this->flags_)
+    {
+        if (flag == f)
+        {
+            return true;
+        }
 
+    }
+    return false;
+}
 
 sheep::sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY) :animal("sheep.png", window_surface_ptr, positionX, positionY)
 {
@@ -119,8 +127,7 @@ sheep::sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY) :ani
     this->setDirectionY(1 * this->getSpeed());
     this->cdCop = 0;
     this->Baby = false;
-
-    setImage("sheep.png");
+    this->addFlag("prey");
 }
 sheep::~sheep() 
 {
@@ -185,8 +192,8 @@ wolf::wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY) : anim
     this->setDirectionY(1 * this->getSpeed());
     this->setFood(1500);
     this->setPeur(1);
+    this->addFlag("predator");
 
-    setImage("wolf.png");
 
 }
 wolf::~wolf()
@@ -216,10 +223,9 @@ dog::dog(SDL_Surface* window_surface_ptr, int positionX, int positionY) : animal
 {
     this->setDirectionX(1 * this->getSpeed());
     this->setDirectionY(1 * this->getSpeed());
-    bool clicPress_ = false;
     int destinationX=-1;
     int destinationY=-1;
-    setImage("doggo.png");
+    this->addFlag("dog");
 
 }
 dog::~dog()
@@ -231,14 +237,6 @@ void dog::move()
     Deplacement(getDirectionX(), getDirectionY());
 }
 
-bool dog::getClicPress()
-{
-    return this->clicPress_;
-}
-void dog::setClicPress(bool clicPress)
-{
-    this->clicPress_ = clicPress;
-}
 void dog::setDestination(int destinationX, int destinationY)
 {
     this->destinationX = destinationX;
@@ -274,27 +272,27 @@ void Humain::move()
 {
     directionY_ = 0;
     directionX_ = 0;
-    while (SDL_PollEvent(&touche)) {
-        if (touche.type = SDL_KEYDOWN)
-        {
-            if (touche.key.keysym.sym == SDLK_s) {
-                directionY_ = 1;
 
-            }
-            if (touche.key.keysym.sym == SDLK_z) {
-                directionY_ = -1;
+    if (this->touche.type = SDL_KEYDOWN)
+    {
+        if (this->touche.key.keysym.sym == SDLK_s) {
+            directionY_ = 1;
 
-            }
-            if (touche.key.keysym.sym == SDLK_q) {
-                directionX_ = -1;
+        }
+        if (this->touche.key.keysym.sym == SDLK_z) {
+            directionY_ = -1;
 
-            }
-            if (touche.key.keysym.sym == SDLK_d) {
-                directionX_ = 1;
+        }
+        if (this->touche.key.keysym.sym == SDLK_q) {
+            directionX_ = -1;
 
-            }
+        }
+        if (this->touche.key.keysym.sym == SDLK_d) {
+            directionX_ = 1;
+
         }
     }
+
     positionX_ += directionX_ * getSpeed();
     positionY_ += directionY_ * getSpeed();
 }
@@ -334,6 +332,10 @@ void Humain::setSpeed(int speed)
 int Humain::getSpeed()
 {
     return this->speed_;
+}
+void Humain::setevent(SDL_Event  ev)
+{
+    this->touche = ev;
 }
 SDL_Rect Humain::getRectangle()
 {
@@ -382,7 +384,7 @@ void ground::update()
         compteur += 1;
 
 
-        if (animal_->getImage() == "sheep.png" && animal_->getVivant())
+        if (animal_->hasFlag("prey") && animal_->getVivant())
         {
             
             //
@@ -391,7 +393,7 @@ void ground::update()
             int procheY = 101;
             for (auto&& partenaire_ : animalList)
             {
-                if (partenaire_->getImage() == "wolf.png" && partenaire_->getVivant())
+                if (partenaire_->hasFlag("predator") && partenaire_->getVivant())
                 {
                     if (abs(partenaire_->getPosX() - animal_->getPosX()) <= 100)
                     {
@@ -413,7 +415,7 @@ void ground::update()
                 {
                     if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()) && partenaire_ != animal_)
                     {
-                        if (partenaire_->getImage() == "sheep.png" && partenaire_->getVivant())
+                        if (partenaire_->hasFlag("prey") && partenaire_->getVivant())
                         {
                             if (partenaire_->getCdCop() == 0)
                             {
@@ -473,13 +475,13 @@ void ground::update()
             }
 
         }
-        else if (animal_->getImage() == "wolf.png" && animal_->getVivant())
+        else if (animal_->hasFlag("predator") && animal_->getVivant())
         {
             int procheX = frame_width;
             int procheY = frame_height;
             for (auto&& partenaire_ : animalList)
             {
-                if (partenaire_->getImage() == "sheep.png" && partenaire_->getVivant() && animal_->getPeur()==1)
+                if (partenaire_->hasFlag("prey") && partenaire_->getVivant() && animal_->getPeur()==1)
                 {
                     if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()))
                     {
@@ -497,7 +499,7 @@ void ground::update()
 
 
                 }
-                else if (partenaire_->getImage() == "doggo.png" && partenaire_->getVivant())
+                else if (partenaire_->hasFlag("dog") && partenaire_->getVivant())
                 {
                     if (abs(partenaire_->getPosX() - animal_->getPosX()) <= 100)
                     {
@@ -572,87 +574,86 @@ void ground::update()
             }
 
         }
-        else if (animal_->getImage() == "doggo.png" && animal_->getVivant())
+        else if (animal_->hasFlag("dog") && animal_->getVivant())
         {
-            //SDL_Event event;
-            ////while (SDL_PollEvent(&e)) {
-            ////    std::cout << "PUT";
-            ////    switch (e.type) {
-            ////    case SDL_MouseButtonEvent:
-            ////        std::cout << "?";
-            ////        animal_->setClicPress(false);
-            ////        int sourisX;
-            ////        int sourisY;
-            ////        //SDL_GetMouseState(&sourisX, &sourisY);
-            ////        
-            ////        animal_->setDestination(e.button.x, e.button.y);
-            ////        break;
-            ////    case SDL_QUIT:
-            ////        break;
-            ////    //case SDL_MOUSEBUTTONDOWN:
-            ////    //    //do whatever you want to do after a mouse button was pressed,
-            ////    //    // e.g.:
-            ////    //    animal_->setClicPress(true);
-            ////    //    break;
-            ////    }
-            ////}
-            //while (SDL_PollEvent(&event)) {
-            //    if (event.type == SDL_MOUSEBUTTONDOWN)
-            //    {
-            //        std::cout << "YESN?";
 
-            //    }
-            //}
-            //
-
-
-            
             int cheminX;
             int cheminY;
             if (animal_->getDestinationX() >= 0 && animal_->getDestinationY() >= 0 )
             {
+                cheminX = animal_->getDestinationX();
+                cheminY = animal_->getDestinationY();
+                if (cheminX > animal_->getPosX())
+                {
+                    animal_->setDirectionX(1 * animal_->getSpeed());
+
+                }
+                else if (cheminX < animal_->getPosX())
+                {
+                    animal_->setDirectionX(-1 * animal_->getSpeed());
+
+                }
+                else
+                {
+                    animal_->setDirectionX(0);
+                }
+                if (cheminY > animal_->getPosY())
+                {
+                    animal_->setDirectionY(1 * animal_->getSpeed());
+
+                }
+                else if (cheminY < animal_->getPosY())
+                {
+                    animal_->setDirectionY(-1 * animal_->getSpeed());
+
+                }
+                else
+                {
+                    animal_->setDirectionY(0);
+                }
+
                 SDL_Point destination = { animal_->getDestinationX(), animal_->getDestinationY() };
                 if (SDL_PointInRect(&destination,&animal_->getRectangle() ))
                 {
                     animal_->setDestination(-1,-1);
                 }
-                cheminX = animal_->getDestinationX();
-                cheminY = animal_->getDestinationY();
+                
 
             }
             else
             {
                 cheminX = this->player.getPosX();
                 cheminY = this->player.getPosY();
-            }
-            if (cheminX > animal_->getPosX())
-            {
-                animal_->setDirectionX(1 * animal_->getSpeed());
+                if ((cheminX > animal_->getPosX() + 30) || (animal_->getPosX() - cheminX>=0 && animal_->getPosX() - cheminX <30))
+                {
+                    animal_->setDirectionX(1 * animal_->getSpeed());
 
-            }
-            else if (cheminX < animal_->getPosX())
-            {
-                animal_->setDirectionX(-1 * animal_->getSpeed());
+                }
+                else if (cheminX < animal_->getPosX() - 30 || (cheminX  - animal_->getPosX() >= 0 && cheminX - animal_->getPosX() < 30))
+                {
+                    animal_->setDirectionX(-1 * animal_->getSpeed());
 
-            }
-            else
-            {
-                animal_->setDirectionX(0);
-            }
-            if (cheminY > animal_->getPosY())
-            {
-                animal_->setDirectionY(1 * animal_->getSpeed());
+                }
+                else
+                {
+                    animal_->setDirectionX(0);
+                }
+                if (cheminY > animal_->getPosY() + 30 || (animal_->getPosY() - cheminY >= 0 && animal_->getPosY() - cheminY < 30))
+                {
+                    animal_->setDirectionY(1 * animal_->getSpeed());
 
-            }
-            else if (cheminY < animal_->getPosY())
-            {
-                animal_->setDirectionY(-1 * animal_->getSpeed());
+                }
+                else if (cheminY < animal_->getPosY() - 30 || (cheminY - animal_->getPosY() >= 0 && cheminY - animal_->getPosY() < 30))
+                {
+                    animal_->setDirectionY(-1 * animal_->getSpeed());
 
+                }
+                else
+                {
+                    animal_->setDirectionY(0);
+                }
             }
-            else
-            {
-                animal_->setDirectionY(0);
-            }
+            
             
 
         }
@@ -735,9 +736,24 @@ void ground::update()
         animauxNai.pop_back();
     }
 
-    player.move();
     player.draw();
 }
+void ground::updatePlayer(SDL_Event ev)
+{
+    this->player.setevent(ev);
+    this->player.move();
+}
+void ground::updateDogs(SDL_Event ev)
+{
+    for (auto&& animal_ : this->animalList)
+    {
+        if (animal_->hasFlag("dog") && animal_->getVivant())
+        {
+            animal_->setDestination(ev.button.x, ev.button.y);
+        }
+    }
+}
+
 application::application(unsigned n_sheep, unsigned n_wolf)
 {
     window_ptr_ = SDL_CreateWindow("fenetre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, frame_width, frame_height, SDL_WINDOW_SHOWN);
@@ -792,6 +808,16 @@ int application::loop(unsigned period)
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 quit = true;
+                break;
+            }
+            if (e.type == SDL_KEYDOWN)
+            {
+                this->ground_.updatePlayer(e);
+                break;
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN)
+            {
+                this->ground_.updateDogs(e);
                 break;
             }
         }
