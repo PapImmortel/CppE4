@@ -255,7 +255,7 @@ dog::dog(SDL_Surface* window_surface_ptr, int positionX, int positionY) : animal
 {
     this->setDirectionX(1 * this->getSpeed());
     this->setDirectionY(1 * this->getSpeed());
-    this->setDestination(-1, -1);
+    this->setDestination(-2, -2);
     this->addFlag("dog");
 }
 
@@ -693,8 +693,10 @@ void ground::update()
                 
 
             }
-            else
+            else if (animal_->getDestinationX() == -1 && animal_->getDestinationY() == -1)
             {
+                         
+                
                 cheminX = this->player.getPosX();
                 cheminY = this->player.getPosY();
                 if ((cheminX > animal_->getPosX() + 30) || (animal_->getPosX() - cheminX>=0 && animal_->getPosX() - cheminX <30))
@@ -725,6 +727,18 @@ void ground::update()
                 {
                     animal_->setDirectionY(0);
                 }
+                if (animal_->getDirectionX() == 0 && animal_->getDirectionY()==0)
+                {
+                    animal_->setDestination(-2, -2);
+                }
+                
+            }
+            else if (animal_->getDestinationX() == -2 && animal_->getDestinationY() == -2)
+            {
+                float timedelta = SDL_GetTicks() % 360;
+                float positionX = cos((timedelta * 2 * std::_Pi) / 360) * 60 + this->player.getPosX();
+                float positionY = sin((timedelta * 2 * std::_Pi) / 360) * 60 + this->player.getPosY();
+                animal_->Deplacement(positionX - animal_->getPosX(), positionY - animal_->getPosY());
             }
             
             
