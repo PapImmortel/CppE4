@@ -84,6 +84,8 @@ public:
     virtual int getDestinationY() { return 0; };
     virtual void setPeur(int peur){};
     virtual int getPeur() { return 1; };
+    virtual void setRandomMove(int randomMove){};
+    virtual int getRandomMove() { return 0; };
 };
 
 // Insert here:
@@ -92,6 +94,7 @@ class sheep : public animal {
 private:
     int cdCop;
     bool Baby;
+    int randomMove_;
 
 public:
   // todo                                                                             
@@ -108,6 +111,8 @@ public:
     bool HasBaby() ;
     void changeBaby();
     void BabyFalse();
+    void setRandomMove(int randomMove);
+    int getRandomMove();
 
 };
 

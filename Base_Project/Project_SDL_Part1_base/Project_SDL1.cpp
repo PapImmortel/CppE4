@@ -145,6 +145,7 @@ sheep::sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY) :ani
     this->cdCop = 0;
     this->Baby = false;
     this->addFlag("prey");
+    this->setRandomMove(100);
 }
 sheep::~sheep() 
 {
@@ -203,6 +204,15 @@ int sheep::getCdCop()
 
     return this->cdCop;
 }
+void sheep::setRandomMove(int randomMove)
+{
+    this->randomMove_ = randomMove;
+}
+int sheep::getRandomMove()
+{
+    return this->randomMove_;
+}
+
 wolf::wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY) : animal("wolf.png", window_surface_ptr, positionX, positionY)
 {
 
@@ -468,7 +478,7 @@ void ground::update()
 
                         }
                     }
-                }
+                }    
             }
             animal_->copBaisse(1);
             
@@ -506,10 +516,33 @@ void ground::update()
             {
                 if (animal_->getSpeed() > 1)
                 {
-                    animal_->setDirectionX(animal_->getDirectionX()/ animal_->getSpeed());
+                    animal_->setDirectionX(animal_->getDirectionX() / animal_->getSpeed());
                     animal_->setDirectionY(animal_->getDirectionY() / animal_->getSpeed());
 
                     animal_->setSpeed(1);
+                }
+                if (animal_->getRandomMove() <= 0)
+                {
+                    int nbAlea[3] = { -1, 0, 1 };
+                    std::random_device rd{};
+                    bool mouvement = false;
+                    while (!mouvement)
+                    {
+                        mouvement = true;
+                        animal_->setDirectionX(animal_->getSpeed() * nbAlea[(rd() % 3)]);
+                        animal_->setDirectionY(animal_->getSpeed() * nbAlea[(rd() % 3)]);
+                        if (animal_->getDirectionX() == 0 && animal_->getDirectionY() == 0)
+                        {
+                            mouvement = false;
+                        }
+                    }
+
+                    animal_->setRandomMove(100);
+
+                }
+                else
+                {
+                    animal_->setRandomMove(animal_->getRandomMove() - 1);
 
                 }
             }
