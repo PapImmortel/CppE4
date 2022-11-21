@@ -30,12 +30,12 @@ private:
     SDL_Surface* image_ptr_; // The texture of the sheep (the loaded image), use
                            // load_surface_for
     SDL_Rect rectangle_;
-    int positionX_;
-    int positionY_;
+    float positionX_;
+    float positionY_;
     int speed_;
     std::string image_;
-    int directionX_;
-    int directionY_;
+    float directionX_;
+    float directionY_;
     bool vivant_;
     std::vector<std::string> flags_;
 
@@ -43,16 +43,16 @@ private:
 
 public:
     animal(){};
-    animal(const std::string& file_path, SDL_Surface* window_surface_ptr, int positionX, int positionY);
+    animal(const std::string& file_path, SDL_Surface* window_surface_ptr, float positionX, float positionY);
     // todo: The constructor has to load the sdl_surface that corresponds to the
     // texture
-    void Deplacement(int px, int pY);
-    int getPosX();
-    int getPosY();
-    void setDirectionX(int directionX);
-    void setDirectionY(int directionY);
-    int getDirectionX();
-    int getDirectionY();
+    void Deplacement(float px, float pY);
+    float getPosX();
+    float getPosY();
+    void setDirectionX(float directionX);
+    void setDirectionY(float directionY);
+    float getDirectionX();
+    float getDirectionY();
     SDL_Rect getRectangle();
     void setVivant(bool vivant);
     bool getVivant();
@@ -79,9 +79,9 @@ public:
     virtual void BabyFalse() {};
     virtual void copBaisse(int n) {};
     virtual void augmentCd(int n) {};
-    virtual void setDestination(int destinationX, int destinationY){};
-    virtual int getDestinationX() { return 0; };
-    virtual int getDestinationY() { return 0; };
+    virtual void setDestination(float destinationX, float destinationY){};
+    virtual float getDestinationX() { return 0; };
+    virtual float getDestinationY() { return 0; };
     virtual void setPeur(int peur){};
     virtual int getPeur() { return 1; };
     virtual void setRandomMove(int randomMove){};
@@ -102,7 +102,7 @@ public:
   // Dtor
   // implement functions that are purely virtual in base class
     sheep(){};
-    sheep(SDL_Surface* window_surface_ptr, int positionX, int positionY);
+    sheep(SDL_Surface* window_surface_ptr, float positionX, float positionY);
     ~sheep();
     void move();
     int getCdCop();
@@ -124,7 +124,7 @@ private:
     int food_;
     int peur_;
 public: // todo
-    wolf(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
+    wolf(SDL_Surface* window_surface_ptr, float positionX, float positionY);// Ctor
     wolf() {};
     ~wolf();
     void move();
@@ -138,13 +138,13 @@ private:
     int destinationX;
     int destinationY;
 public: // todo
-    dog(SDL_Surface* window_surface_ptr, int positionX, int positionY);// Ctor
+    dog(SDL_Surface* window_surface_ptr, float positionX, float positionY);// Ctor
     dog() {};
     ~dog();
     void move();
-    void setDestination(int destinationX, int destinationY);
-    int getDestinationX();
-    int getDestinationY();
+    void setDestination(float destinationX, float destinationY);
+    float getDestinationX();
+    float getDestinationY();
 
     
 };
