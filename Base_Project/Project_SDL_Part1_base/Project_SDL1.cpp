@@ -213,7 +213,7 @@ int sheep::getRandomMove()
 wolf::wolf(SDL_Surface* window_surface_ptr, float positionX, float positionY) : animal("wolf.png", window_surface_ptr, positionX, positionY)
 {
 
-    this->setFood(1500);
+    this->setFood(3000);
     this->setPeur(1);
     this->addFlag("predator");
 }
@@ -464,8 +464,8 @@ void ground::update()
                             if (partenaire_->getCdCop() == 0)
                             {
                                 animal_->changeBaby();
-                                animal_->augmentCd(181);
-                                partenaire_->augmentCd(181);
+                                animal_->augmentCd(250);
+                                partenaire_->augmentCd(250);
 
 
                             }
@@ -524,7 +524,7 @@ void ground::update()
                     if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()))
                     {
                         partenaire_->setVivant(false);
-                        animal_->setFood(15000);
+                        animal_->setFood(3000);
                     }
                     else if ((abs(partenaire_->getPosX() - animal_->getPosX()) + abs(partenaire_->getPosY() - animal_->getPosY()) <= abs(procheX) + abs(procheY)) && animal_->getPeur() == 1)
                     {
@@ -604,6 +604,11 @@ void ground::update()
                 {
                     animal_->setDirectionX((cheminX / diagonale)  * animal_->getSpeed());
                     animal_->setDirectionY((cheminY / diagonale)* animal_->getSpeed());
+                }
+                else if (abs(cheminX) + abs(cheminY) < 50)
+                {
+                    animal_->setDirectionX(-(cheminX / diagonale)* animal_->getSpeed());
+                    animal_->setDirectionY(-(cheminY / diagonale)* animal_->getSpeed());
                 }
                 else
                 {
@@ -761,7 +766,7 @@ application::application(unsigned n_sheep, unsigned n_wolf)
 
     }
 
-    //ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, 1100, 600));
+    ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, 1100, 600));
 
 
 }
