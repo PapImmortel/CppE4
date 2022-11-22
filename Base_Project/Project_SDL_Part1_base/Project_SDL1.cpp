@@ -60,8 +60,12 @@ animal::~animal()
 }
 void animal::draw()
 {
-    this->rectangle_ = { (int)this->positionX_, (int)this->positionY_ ,30,30 };
-    SDL_BlitScaled(this->image_ptr_,NULL,this->window_surface_ptr_, &this->rectangle_);
+    if (this->getVivant())
+    {
+        this->rectangle_ = { (int)this->positionX_, (int)this->positionY_ ,30,30 };
+        SDL_BlitScaled(this->image_ptr_, NULL, this->window_surface_ptr_, &this->rectangle_);
+    }
+    
 }
 void animal::Deplacement(float pX, float pY)
 {
@@ -453,9 +457,9 @@ void ground::update()
                 }
                 else if (animal_->getCdCop() == 0)
                 {
-                    if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()) && partenaire_ != animal_)
+                    if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()) && partenaire_ != animal_ && partenaire_->getVivant())
                     {
-                        if (partenaire_->hasFlag("prey") && partenaire_->getVivant())
+                        if (partenaire_->hasFlag("prey") )
                         {
                             if (partenaire_->getCdCop() == 0)
                             {
@@ -515,12 +519,12 @@ void ground::update()
             int procheY = frame_height;
             for (auto&& partenaire_ : animalList)
             {
-                if (partenaire_->hasFlag("prey") && partenaire_->getVivant() )
+                if (partenaire_->hasFlag("prey") && partenaire_->getVivant())
                 {
                     if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()))
                     {
                         partenaire_->setVivant(false);
-                        animal_->setFood(1500);
+                        animal_->setFood(15000);
                     }
                     else if ((abs(partenaire_->getPosX() - animal_->getPosX()) + abs(partenaire_->getPosY() - animal_->getPosY()) <= abs(procheX) + abs(procheY)) && animal_->getPeur() == 1)
                     {
@@ -554,50 +558,7 @@ void ground::update()
             animal_->setDirectionX((procheX / diagonale)  * animal_->getSpeed() * animal_->getPeur());
             animal_->setDirectionY((procheY / diagonale) * animal_->getSpeed() * animal_->getPeur());
 
-            /*if (abs(procheX) > abs(procheY))
-            {
-                animal_->setDirectionY(0);
-                if (procheX < 0)
-                {
-                    animal_->setDirectionX(-1 * animal_->getSpeed()* animal_->getPeur());
-                }
-                else if (procheX > 0)
-                {
-                    animal_->setDirectionX(1 * animal_->getSpeed() * animal_->getPeur());
-                }
-            }
-            else if (abs(procheX) < abs(procheY))
-            {
-                animal_->setDirectionX(0);
-
-                if (procheY < 0)
-                {
-                    animal_->setDirectionY(-1 * animal_->getSpeed() * animal_->getPeur());
-                }
-                else if (procheY > 0)
-                {
-                    animal_->setDirectionY(1 * animal_->getSpeed() * animal_->getPeur());
-                }
-            }
-            else
-            {
-                if (procheX < 0)
-                {
-                    animal_->setDirectionX(-1 * animal_->getSpeed() * animal_->getPeur());
-                }
-                else if (procheX > 0)
-                {
-                    animal_->setDirectionX(1 * animal_->getSpeed() * animal_->getPeur());
-                }
-                if (procheY < 0)
-                {
-                    animal_->setDirectionY(-1 * animal_->getSpeed() * animal_->getPeur());
-                }
-                else if (procheY > 0)
-                {
-                    animal_->setDirectionY(1 * animal_->getSpeed() * animal_->getPeur());
-                }
-            }*/
+            
             animal_->setFood(animal_->getFood() - 1);
             if (animal_->getFood() <= 0)
             {
@@ -639,29 +600,32 @@ void ground::update()
                 cheminY = this->player.getPosY() - animal_->getPosY();
 
                 float diagonale = sqrt(cheminX * cheminX + cheminY * cheminY);
-                if (cheminX < -60 || cheminX>60)
+                if (abs(cheminX) + abs(cheminY) > 60 )
                 {
                     animal_->setDirectionX((cheminX / diagonale)  * animal_->getSpeed());
+                    animal_->setDirectionY((cheminY / diagonale)* animal_->getSpeed());
                 }
                 else
                 {
                     animal_->setDirectionX(0);
-
-                }
-                if (cheminY < -60 || cheminY>60)
-                {
-                    animal_->setDirectionY((cheminY / diagonale) *  animal_->getSpeed());
-                }
-                else
-                {
                     animal_->setDirectionY(0);
-                }
-                
 
-                if (animal_->getDirectionX() == 0 && animal_->getDirectionY()==0)
-                {
-                    animal_->setDestination(-2, -2);
+                    float timedelta = (SDL_GetTicks() / 4) % 360;
+                    int positionX = (cos((timedelta * 2 * std::_Pi) / 360))*100;
+                    int positionY = (sin((timedelta * 2 * std::_Pi) / 360))*100;
+                    float diagonale = sqrt(cheminX * cheminX + cheminY * cheminY);
+                    int actualX = (-cheminX / diagonale) * 100;
+                    int actualY = (-cheminY / diagonale) * 100;
+
+
+                    if (abs(actualX - positionX)<5 && abs(actualY - positionY)<5)
+                    {
+                        animal_->setDestination(-2, -2);
+                    }
                 }
+
+                
+                
                 
             }
             else if (animal_->getDestinationX() == -2 && animal_->getDestinationY() == -2)
@@ -684,32 +648,46 @@ void ground::update()
 
     }
     //morts des animaux
-    std::vector<int> animauxMorts;
+    /*std::vector<int> animauxMorts;*/
 
     
     int pCompteur = 0;
-    for (auto&& animal_ : animalList)
+    /*for (auto&& animal_ : animalList)
     {
         if (!animal_->getVivant())
         {
             animauxMorts.push_back(pCompteur);
-
+            break;
+        }
+        pCompteur += 1;
+    }*/
+    int animalMort=-1;
+    for (auto&& animal_ : animalList)
+    {
+        if (!animal_->getVivant())
+        {
+            animalMort=pCompteur;
+            break;
         }
         pCompteur += 1;
     }
-
-    for (int i = 0; i < size(animauxMorts); i++)
+    if (animalMort!=-1)
     {
-        animalList.erase(animalList.begin() + animauxMorts[i] - i);
-        
-       
-    }
+        /*for (int i = 0; i < size(animauxMorts); i++)
+        {
+            std::cout << animalList.size() << " taille ";
+            std::cout << animauxMorts[i] - i<< " position ";
+            std::cout << " ? ";
 
-    while (!animauxMorts.empty())
-    {
-        animauxMorts.pop_back();
+        }*/
+        animalList.erase(animalList.begin() + animalMort);
+        /*while (!animauxMorts.empty())
+        {
+            animauxMorts.pop_back();
 
+        }*/
     }
+    
 
     //reproduction
     
@@ -765,10 +743,6 @@ application::application(unsigned n_sheep, unsigned n_wolf)
     }
     ground_ = ground(window_surface_ptr_);
 
-    //ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 0, 100));
-    //ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 500, 100));
-    //ground_.add_animal(std::make_shared<sheep>(window_surface_ptr_, 500, 100));
-
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distX(0, frame_width - 30);
@@ -787,8 +761,7 @@ application::application(unsigned n_sheep, unsigned n_wolf)
 
     }
 
-    //ground_.add_animal(std::make_shared<wolf>(window_surface_ptr_, 1000, 100));
-    ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, 1100, 600));
+    //ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, 1100, 600));
 
 
 }
