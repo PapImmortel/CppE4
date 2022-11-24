@@ -55,8 +55,8 @@ animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr, fl
 }
 animal::~animal()
 {
-    /*SDL_FreeSurface(this->window_surface_ptr_);
-    SDL_FreeSurface(this->image_ptr_);*/
+    SDL_FreeSurface(this->window_surface_ptr_);
+    SDL_FreeSurface(this->image_ptr_);
 }
 void animal::draw()
 {
@@ -402,6 +402,7 @@ ground::ground(SDL_Surface* window_surface_ptr)
     this->player = Humain(this->window_surface_ptr_, 150, 150);
 
 
+
 }
 ground::~ground()
 {
@@ -652,20 +653,10 @@ void ground::update()
         
 
     }
-    //morts des animaux
-    /*std::vector<int> animauxMorts;*/
 
     
     int pCompteur = 0;
-    /*for (auto&& animal_ : animalList)
-    {
-        if (!animal_->getVivant())
-        {
-            animauxMorts.push_back(pCompteur);
-            break;
-        }
-        pCompteur += 1;
-    }*/
+
     int animalMort=-1;
     for (auto&& animal_ : animalList)
     {
@@ -769,7 +760,6 @@ application::~application()
 int application::loop(unsigned period)
 {
 
-    return 0;*/
     this->ground_.update();
 
     SDL_UpdateWindowSurface(window_ptr_);
