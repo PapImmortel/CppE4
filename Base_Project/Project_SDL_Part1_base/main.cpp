@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
                              "simulation time\n");
 
     init();
-
+     
     std::cout << "Done with initilization" << std::endl;
 
     application my_app(std::stoul(argv[1]), std::stoul(argv[2]));
