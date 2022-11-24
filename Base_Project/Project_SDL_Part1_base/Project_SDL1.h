@@ -37,6 +37,7 @@ private:
     float directionX_;
     float directionY_;
     bool vivant_;
+    bool genre_;
     std::vector<std::string> flags_;
 
     // todo: Attribute(s) to define its position
@@ -56,7 +57,8 @@ public:
     SDL_Rect getRectangle();
     void setVivant(bool vivant);
     bool getVivant();
-
+    void setGenre(bool genre);
+    bool getGenre();
     void setSpeed(int speed);
     int getSpeed();
     void addFlag(std::string flag);
@@ -183,6 +185,22 @@ public:
 
 
 };
+class Score {
+private:
+    SDL_Surface* window_surface_ptr_; 
+    SDL_Surface* image_ptr_;
+    SDL_Rect rectangle_;
+    int nbMoutonALive_;
+public:
+    Score() {};
+    ~Score() {};
+
+    Score(SDL_Surface* window_surface_ptr,int nbMoutonAlive);
+    void setNbMoutonAlive(int nbMoutonAlive);
+    int getNbMoutonAlive();
+    void draw();
+
+};
 // Use only sheep at first. Once the application works
 // for sheep you can add the wolves
 
@@ -199,16 +217,19 @@ private:
     wolf lou;*/
     std::vector<std::shared_ptr<animal>> animalList;
     Uint32 color;
+    Score score_;
+    int nbScore_;
 public:
     ground(){};
 
-    ground(SDL_Surface* window_surface_ptr); // todo: Ctor
+    ground(SDL_Surface* window_surface_ptr,int nbScore); // todo: Ctor
     ~ground(); // todo: Dtor, again for clean up (if necessary)
     void add_animal(std::shared_ptr<animal> newAnimal); // todo: Add an animal
     void update(); // todo: "refresh the screen": Move animals and draw them
     // Possibly other methods, depends on your implementation
     void updatePlayer(SDL_Event ev);// todo: "refresh the screen": Move animals and draw them
     void updateDogs(SDL_Event ev);
+    void setNbScore(int nbScore);
 };
 
 // The application class, which is in charge of generating the window

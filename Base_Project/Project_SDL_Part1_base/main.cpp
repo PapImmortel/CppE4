@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Done with initilization" << std::endl;
 
     application my_app(std::stoul(argv[1]), std::stoul(argv[2]));
-    //application my_app(10,3);
+    //application my_app(25,3);
 
     std::cout << "Created window" << std::endl;
 

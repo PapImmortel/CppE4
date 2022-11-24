@@ -41,7 +41,10 @@ animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr, fl
 
     this->setDirectionX(this->getSpeed() * cos(dist(gen)));
     this->setDirectionY(this->getSpeed() * sin(dist(gen)));
-    
+    std::random_device rd2;
+    std::mt19937 gen2(rd2());
+    std::uniform_int_distribution<> dist2(0, 1);
+    this->setGenre(dist2(gen2));
 
     this->image_ptr_ = IMG_Load(file_path.c_str());
     if (!this->image_ptr_)
@@ -53,6 +56,7 @@ animal::animal(const std::string& file_path, SDL_Surface* window_surface_ptr, fl
     this->rectangle_ = { (int)this->positionX_, (int)this->positionY_ ,30,30 };
 
 }
+
 animal::~animal()
 {
     SDL_FreeSurface(this->window_surface_ptr_);
@@ -119,6 +123,15 @@ bool animal::getVivant()
 {
     return vivant_;
 }
+void animal::setGenre(bool genre)
+{
+    this->genre_ = genre;
+}
+bool animal::getGenre()
+{
+    return this->genre_;
+}
+
 void animal::addFlag(std::string flag)
 {
     this->flags_.push_back(flag);
@@ -388,7 +401,96 @@ SDL_Rect Humain::getRectangle()
     return this->rectangle_;
 }
 
-ground::ground(SDL_Surface* window_surface_ptr)
+Score::Score(SDL_Surface* window_surface_ptr,int nbMoutonAlive)
+{
+    this->image_ptr_ = IMG_Load("score.png");
+    if (!this->image_ptr_)
+        throw std::runtime_error("Could not load image");
+    this->window_surface_ptr_ = window_surface_ptr;
+    if (!this->window_surface_ptr_)
+        throw std::runtime_error(std::string(SDL_GetError()));
+
+    this->rectangle_ = { frame_width/3 +50, 0 ,70,60 };
+    this->setNbMoutonAlive(nbMoutonAlive);
+
+}
+void Score::setNbMoutonAlive(int nbMoutonAlive)
+{
+    this->nbMoutonALive_ = nbMoutonAlive ;
+}
+int Score::getNbMoutonAlive()
+{
+    return this->nbMoutonALive_;
+}
+void Score::draw()
+{
+    SDL_BlitScaled(this->image_ptr_, NULL, this->window_surface_ptr_, &this->rectangle_);
+    int valeur = this->getNbMoutonAlive();
+    int position=250;
+    if (valeur == 0)
+    {
+        SDL_Rect newRect = { frame_width / 3 + position,10,40,40 };
+        SDL_BlitScaled(IMG_Load("0.png"), NULL, this->window_surface_ptr_, &newRect);
+
+    }
+    else
+    {
+        while (valeur > 0)
+        {
+            SDL_Rect newRect = { frame_width / 3 + position,10,40,40 };
+            position -= 50;
+            int newVal = valeur % 10;
+            if (newVal == 0)
+            {
+                SDL_BlitScaled(IMG_Load("0.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 1)
+            {
+                SDL_BlitScaled(IMG_Load("1.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 2)
+            {
+                SDL_BlitScaled(IMG_Load("2.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 3)
+            {
+                SDL_BlitScaled(IMG_Load("3.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 4)
+            {
+                SDL_BlitScaled(IMG_Load("4.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 5)
+            {
+                SDL_BlitScaled(IMG_Load("5.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 6)
+            {
+                SDL_BlitScaled(IMG_Load("6.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 7)
+            {
+                SDL_BlitScaled(IMG_Load("7.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 8)
+            {
+                SDL_BlitScaled(IMG_Load("8.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            else if (newVal == 9)
+            {
+                SDL_BlitScaled(IMG_Load("9.png"), NULL, this->window_surface_ptr_, &newRect);
+            }
+            valeur /= 10;
+
+        }
+    }
+    
+    
+   
+}
+
+
+ground::ground(SDL_Surface* window_surface_ptr, int nbScore)
 {
     this->window_surface_ptr_ = window_surface_ptr;
     if (!window_surface_ptr_)
@@ -399,9 +501,8 @@ ground::ground(SDL_Surface* window_surface_ptr)
     SDL_FillRect(window_surface_ptr_, NULL, color);
     this->rectangle = { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,frame_width, frame_height };
     std::vector<std::shared_ptr<animal>> animalList = {};
-    this->player = Humain(this->window_surface_ptr_, 150, 150);
-
-
+    this->player = Humain(this->window_surface_ptr_, frame_width/2, frame_height/2);
+    this->score_ = Score(this->window_surface_ptr_,nbScore);
 
 }
 ground::~ground()
@@ -421,8 +522,10 @@ void ground::add_animal(std::shared_ptr<animal> newAnimal)
 
 void ground::update()
 {
+
     SDL_FillRect(window_surface_ptr_, NULL, this->color);
     int compteur = 0;
+    this->score_.draw();
 
     for (auto&& animal_ : animalList)
     {
@@ -456,18 +559,16 @@ void ground::update()
                         }
                     }
                 }
-                else if (animal_->getCdCop() == 0)
+                else if (animal_->getCdCop() == 0 && animal_->getGenre()==0)
                 {
                     if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()) && partenaire_ != animal_ && partenaire_->getVivant())
                     {
-                        if (partenaire_->hasFlag("sheep") )
+                        if (partenaire_->hasFlag("sheep") && partenaire_->getGenre()==1)
                         {
                             if (partenaire_->getCdCop() == 0)
                             {
                                 animal_->changeBaby();
-                                animal_->augmentCd(250);
-                                partenaire_->augmentCd(250);
-
+                                animal_->augmentCd(500);
 
                             }
 
@@ -525,6 +626,7 @@ void ground::update()
                     if (SDL_HasIntersection(&animal_->getRectangle(), &partenaire_->getRectangle()))
                     {
                         partenaire_->setVivant(false);
+                        this->score_.setNbMoutonAlive(this->score_.getNbMoutonAlive() - 1);
                         animal_->setFood(3000);
                     }
                     else if ((abs(partenaire_->getPosX() - animal_->getPosX()) + abs(partenaire_->getPosY() - animal_->getPosY()) <= abs(procheX) + abs(procheY)) && animal_->getPeur() == 1)
@@ -691,13 +793,16 @@ void ground::update()
     for (int i = 0; i < size(animauxNai); i++)
     {
         add_animal((std::make_shared<sheep>(window_surface_ptr_, animalList[animauxNai[i]]->getPosX(), animalList[animauxNai[i]]->getPosY())));
+        this->score_.setNbMoutonAlive(this->score_.getNbMoutonAlive() + 1);
+
     }
     while (!animauxNai.empty())
     {
         animauxNai.pop_back();
     }
 
-    player.draw();
+    this->player.draw();
+
 }
 void ground::updatePlayer(SDL_Event ev)
 {
@@ -715,6 +820,8 @@ void ground::updateDogs(SDL_Event ev)
     }
 }
 
+
+
 application::application(unsigned n_sheep, unsigned n_wolf)
 {
     window_ptr_ = SDL_CreateWindow("fenetre", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, frame_width, frame_height, SDL_WINDOW_SHOWN);
@@ -725,8 +832,8 @@ application::application(unsigned n_sheep, unsigned n_wolf)
     {
         throw std::runtime_error(std::string(SDL_GetError()));
     }
-    ground_ = ground(window_surface_ptr_);
-
+    ground_ = ground(window_surface_ptr_,n_sheep);
+    
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distX(0, frame_width - 30);
@@ -745,9 +852,7 @@ application::application(unsigned n_sheep, unsigned n_wolf)
 
     }
 
-    ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, 1100, 600));
-
-
+    ground_.add_animal(std::make_shared<dog>(window_surface_ptr_, distX(gen), distY(gen)));
 }
 
 application::~application()
