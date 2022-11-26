@@ -440,46 +440,60 @@ void Score::draw()
             SDL_Rect newRect = { frame_width / 3 + position,10,40,40 };
             position -= 50;
             int newVal = valeur % 10;
-            if (newVal == 0)
+            switch (newVal)
             {
-                SDL_BlitScaled(IMG_Load("0.png"), NULL, this->window_surface_ptr_, &newRect);
+                case 0:
+                
+                    SDL_BlitScaled(IMG_Load("0.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+                
+                case 1:
+                
+                    SDL_BlitScaled(IMG_Load("1.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 2:
+                
+                    SDL_BlitScaled(IMG_Load("2.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 3:
+                
+                    SDL_BlitScaled(IMG_Load("3.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 4:
+                
+                    SDL_BlitScaled(IMG_Load("4.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 5:
+                
+                    SDL_BlitScaled(IMG_Load("5.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 6:
+                
+                    SDL_BlitScaled(IMG_Load("6.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 7:
+                
+                    SDL_BlitScaled(IMG_Load("7.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 8:
+                
+                    SDL_BlitScaled(IMG_Load("8.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
+                case 9:
+                
+                    SDL_BlitScaled(IMG_Load("9.png"), NULL, this->window_surface_ptr_, &newRect);
+                    break;
+
             }
-            else if (newVal == 1)
-            {
-                SDL_BlitScaled(IMG_Load("1.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 2)
-            {
-                SDL_BlitScaled(IMG_Load("2.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 3)
-            {
-                SDL_BlitScaled(IMG_Load("3.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 4)
-            {
-                SDL_BlitScaled(IMG_Load("4.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 5)
-            {
-                SDL_BlitScaled(IMG_Load("5.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 6)
-            {
-                SDL_BlitScaled(IMG_Load("6.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 7)
-            {
-                SDL_BlitScaled(IMG_Load("7.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 8)
-            {
-                SDL_BlitScaled(IMG_Load("8.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
-            else if (newVal == 9)
-            {
-                SDL_BlitScaled(IMG_Load("9.png"), NULL, this->window_surface_ptr_, &newRect);
-            }
+            
             valeur /= 10;
 
         }
